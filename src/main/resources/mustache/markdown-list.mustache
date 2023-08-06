@@ -1,0 +1,25 @@
+EPUBCheckFX Report
+==================
+
+Validation Result
+-----------------
+
+{{#validationResult}}
+### {{messageId}} (Severity {{severity}})
+
+ - Message: {{message}}
+ - Path: {{path}}
+ - Line: {{line}}
+ - Column: {{column}}
+
+{{/validationResult}}
+
+Info Result
+-----------
+
+{{#infoResult}}
+### {{feature}} ({{resource}})
+
+ - Value: {{value}}
+
+{{/infoResult}}

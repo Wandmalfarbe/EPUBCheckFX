@@ -1,0 +1,32 @@
+/** {
+	-fx-font-family: "Arial";
+}*/
+
+.icon-large {
+    -fx-icon-size: 32px;
+}
+
+/**
+ * AltlantaFX can align table content but not the corresponding column headings.
+ */
+.column-header.align-right > .label {
+    -fx-alignment: BASELINE_RIGHT;
+}
+
+.font-bold {
+	-fx-font-family: "Arial";
+    -fx-font-weight: BOLD;
+}
+
+.drop-area {
+	-fx-border-color: -color-border-default;
+	-fx-border-insets: 0;
+	-fx-border-width: 4;
+	-fx-border-radius: 0;
+	-fx-border-style: dashed;
+	-fx-border-dash-array: 20 20;
+}
+
+.drop-area.active {
+	-fx-border-color: -color-accent-emphasis;
+}

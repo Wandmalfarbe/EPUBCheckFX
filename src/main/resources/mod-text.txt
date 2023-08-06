@@ -1,0 +1,10 @@
+/*module org.openjfx {
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires atlantafx.base;
+    requires org.w3c.epubcheck;
+    exports org.openjfx;
+
+    opens org.openjfx;
+}
+*/

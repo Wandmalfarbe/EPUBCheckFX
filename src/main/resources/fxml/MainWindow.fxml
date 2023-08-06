@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ProgressIndicator?>
+<StackPane fx:id="stackPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.pascalwagler.epubcheckfx.ui.MainWindowController"
+           onDragDropped="#onDragDropped" onDragEntered="#onDragEntered" onDragExited="#onDragExited"
+           onDragOver="#onDragOver">
+    <children>
+        <AnchorPane fx:id="mainContentAnchorPane">
+            <children>
+                <fx:include fx:id="mainContent" source="MainContent.fxml" AnchorPane.topAnchor="0.0"
+                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                            AnchorPane.bottomAnchor="0.0"/>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="dragAndDropAnchorPane">
+            <children>
+                <AnchorPane BorderPane.alignment="CENTER" AnchorPane.topAnchor="0.0"
+                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                            AnchorPane.bottomAnchor="0.0">
+                    <children>
+                        <VBox alignment="CENTER" layoutX="20.0" layoutY="69.5" prefWidth="60.0" spacing="10.0"
+                              fx:id="dropArea" styleClass="drop-area" AnchorPane.bottomAnchor="20.0"
+                              AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"
+                              AnchorPane.topAnchor="20.0">
+                            <children>
+                                <Label text="%drag_and_drop.drag_here"/>
+                                <Button mnemonicParsing="false" text="%drag_and_drop.browse" onAction="#chooseFile"/>
+                            </children>
+                            <padding>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                            </padding>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="loadingPane">
+            <children>
+                <AnchorPane BorderPane.alignment="CENTER" AnchorPane.topAnchor="0.0"
+                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                            AnchorPane.bottomAnchor="0.0">
+                    <children>
+                        <VBox alignment="CENTER" layoutX="20.0" layoutY="69.5" prefWidth="60.0" spacing="10.0"
+                              AnchorPane.bottomAnchor="20.0"
+                              AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"
+                              AnchorPane.topAnchor="20.0">
+                            <children>
+                                <Label text="%validation_in_progress.progress_message"/>
+                                <ProgressIndicator maxHeight="32" maxWidth="32" />
+                                <Button mnemonicParsing="false" text="%validation_in_progress.cancel" onAction="#cancelValidation"/>
+                            </children>
+                            <padding>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                            </padding>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

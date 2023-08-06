@@ -1,0 +1,234 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.pascalwagler</groupId>
+    <artifactId>epubcheckfx</artifactId>
+    <version>1.0.0</version>
+
+    <name>EPUBCheckFX</name>
+    <description>A graphical interface for EPUBCheck.</description>
+    <inceptionYear>2023</inceptionYear>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
+        <openjfx.version>20</openjfx.version>
+        <ikonli.version>12.3.1</ikonli.version>
+
+        <main.class>de.pascalwagler.epubcheckfx.ui.App</main.class>
+        <project.assembly.sourceDir>${project.basedir}/src/main/assembly</project.assembly.sourceDir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${openjfx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${openjfx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.28</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.mkpaz</groupId>
+            <artifactId>atlantafx-base</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.w3c</groupId>
+            <artifactId>epubcheck</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+        <!-- The icon dependency needs to be included before the ikonli-javafx dependency or the
+        runnable jar built with the maven-shade-plugin will exit with the
+        exception `UnsupportedOperationException: Cannot resolve 'mdmz-refresh'`.
+
+        See also https://github.com/kordamp/ikonli/issues/11#issuecomment-367371076-->
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-material2-pack</artifactId>
+            <version>${ikonli.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>${ikonli.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.spullara.mustache.java</groupId>
+            <artifactId>compiler</artifactId>
+            <version>0.9.10</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <executions>
+                    <execution>
+                        <!-- Default configuration for running -->
+                        <!-- Usage: mvn clean javafx:run -->
+                        <id>default-cli</id>
+                        <configuration>
+                            <mainClass>${main.class}</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Create a runnable jar. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>project-classifier</shadedClassifierName>
+                            <outputFile>${project.build.directory}/${project.name}-fat-jar.jar</outputFile>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>de.pascalwagler.epubcheckfx.ui.Launcher</mainClass>
+                                </transformer>
+                                <!-- See https://github.com/kordamp/ikonli/issues/11#issuecomment-449963861 -->
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                            <filters>
+                                <!-- See https://stackoverflow.com/questions/64063528/failsafe-error-invalid-signature-file-digest-for-manifest-main-attributes-whe -->
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- create windows executable -->
+            <!-- TODO: There has to be a universal fat JAR for the Windows build -->
+            <!--<plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.4.1</version>
+                <executions>
+                    <execution>
+                        <id>windows-exe</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <infile>${project.assembly.sourceDir}/dist-windows/launch4j-config.xml</infile>
+                            <jar>${project.build.directory}/${project.name}-fat-jar.jar</jar>
+                            <outfile>${project.build.directory}/${project.name}.exe</outfile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+
+            <!-- create macOS app and disk image -->
+            <!-- TODO: There has to be a universal fat JAR for the Windows build -->
+            <!--<plugin>
+                <groupId>de.perdian.maven.plugins</groupId>
+                <artifactId>macosappbundler-maven-plugin</artifactId>
+                <version>1.19.0</version>
+                <configuration>
+                    <plist>
+                        <CFBundleIconFile>src/main/assembly/dist-macos/EPUBCheckFX.icns</CFBundleIconFile>
+                        <NSHumanReadableCopyright>Copyright © 2023 Pascal Wagler. All rights reserved.</NSHumanReadableCopyright>
+
+                        <JVMMainClassName>de.pascalwagler.epubcheckfx.ui.Launcher</JVMMainClassName>
+                    </plist>
+                    <dmg>
+                        <generate>true</generate>
+                        <appendVersion>false</appendVersion>
+                        <dmgFileName>${project.name}-${project.version}</dmgFileName>
+                    </dmg>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+
+            <!-- create packages for Windows and Linux -->
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+
+                    <execution>
+                        <id>dist-linux</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${project.assembly.sourceDir}/dist-linux.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>dist-windows</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${project.assembly.sourceDir}/dist-windows.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+
+        </plugins>
+    </build>
+</project>

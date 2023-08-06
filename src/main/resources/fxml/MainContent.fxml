@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.pascalwagler.epubcheckfx.ui.MainContentController">
+    <center>
+        <VBox alignment="CENTER" prefHeight="400.0" BorderPane.alignment="CENTER">
+            <children>
+                <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                    <tabs>
+                        <Tab text="%result_tab.validation">
+                            <content>
+                                <TableView fx:id="validationResultTable" prefHeight="200.0" prefWidth="200.0"
+                                           styleClass="striped">
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                    <columns>
+                                        <TableColumn fx:id="messageId" maxWidth="100"
+                                                     text="%result_table.column_message_id"/>
+                                        <TableColumn fx:id="severity" maxWidth="110"
+                                                     text="%result_table.column_severity"/>
+                                        <TableColumn fx:id="message" text="%result_table.column_message"/>
+                                        <TableColumn fx:id="path" text="%result_table.column_path"/>
+                                        <TableColumn fx:id="line" maxWidth="70" styleClass="align-right"
+                                                     text="%result_table.column_line"/>
+                                        <TableColumn fx:id="column" maxWidth="70" styleClass="align-right"
+                                                     text="%result_table.column_column"/>
+                                    </columns>
+                                </TableView>
+                            </content>
+                        </Tab>
+                        <Tab text="%result_tab.metadata">
+                            <content>
+                                <ScrollPane fx:id="scrollMetadata" fitToWidth="true">
+                                </ScrollPane>
+                                <!--<TreeView fx:id="infoTreeTableView" showRoot="false" prefHeight="200.0" prefWidth="200.0" styleClass="striped">
+                                    <columns>
+                                        <TreeTableColumn fx:id="resource" text="%info_table.column_resource" />
+                                        <TreeTableColumn fx:id="feature" text="%info_table.column_feature" />
+                                        <TreeTableColumn fx:id="value" text="%info_table.column_value" />
+                                    </columns>
+                                </TreeView>-->
+                            </content>
+                        </Tab>
+                        <Tab text="%result_tab.info">
+                            <content>
+                                <ScrollPane fx:id="scrollInfo" fitToWidth="true">
+                                </ScrollPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </children>
+            <padding>
+                <Insets left="10.0" right="10.0"/>
+            </padding>
+        </VBox>
+    </center>
+    <top>
+        <HBox spacing="10.0">
+            <children>
+                <fx:include fx:id="infoPanel" source="InfoPanel.fxml" HBox.hgrow="ALWAYS"/>
+                <VBox spacing="10.0">
+                    <ComboBox fx:id="epubProfile"/>
+                    <Button mnemonicParsing="false" onAction="#runEpubCheck" text="%re_validate">
+                        <graphic>
+                            <FontIcon iconLiteral="mdmz-refresh" iconSize="64"/>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </children>
+            <padding>
+                <Insets top="10" left="10.0" right="10.0"/>
+            </padding>
+        </HBox>
+    </top>
+    <bottom>
+        <HBox alignment="BOTTOM_LEFT" prefHeight="0.0" prefWidth="200.0" spacing="10.0"
+              BorderPane.alignment="CENTER_LEFT">
+            <children>
+                <Label fx:id="epubcheckVersion" text="Input"/>
+                <Pane prefHeight="0" prefWidth="0" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="exportFormat"/>
+                <Button mnemonicParsing="false" onAction="#export" text="%export">
+                    <graphic>
+                        <FontIcon iconLiteral="mdmz-save_alt" iconSize="64"/>
+                    </graphic>
+                </Button>
+            </children>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </BorderPane.margin>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<GridPane hgap="10.0" minWidth="200" prefWidth="300" fx:controller="de.pascalwagler.epubcheckfx.ui.InfoPanelController"
+          xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+        <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" prefWidth="63.0"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="22" />
+        <RowConstraints minHeight="22" />
+        <RowConstraints minHeight="22" />
+    </rowConstraints>
+    <children>
+        <Label text="File" styleClass="font-bold">
+            <font>
+                <Font name="System Bold"/>
+            </font>
+        </Label>
+        <Label text="Title" styleClass="font-bold" GridPane.rowIndex="1">
+            <font>
+                <Font name="System Bold"/>
+            </font>
+        </Label>
+        <Label text="Author" styleClass="font-bold" GridPane.rowIndex="2">
+            <font>
+                <Font name="System Bold"/>
+            </font>
+        </Label>
+        <Label text="Label" fx:id="file" GridPane.columnIndex="1"/>
+        <Label text="Label" fx:id="title" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Label" fx:id="author" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    </children>
+</GridPane>

@@ -1,0 +1,49 @@
+<h1>EPUBCheckFX Report</h1>
+
+<h2>Validation Result</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Message-Id</th>
+            <th>Severity</th>
+            <th>Message</th>
+            <th>Path</th>
+            <th>Line</th>
+            <th>Column</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#validationResult}}
+        <tr>
+            <td>{{messageId}}</td>
+            <td>{{severity}}</td>
+            <td>{{message}}</td>
+            <td>{{path}}</td>
+            <td>{{line}}</td>
+            <td>{{column}}</td>
+        </tr>
+    {{/validationResult}}
+    </tbody>
+</table>
+
+<h2>Info Result</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Message-Id</th>
+            <th>Severity</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#infoResult}}
+        <tr>
+            <td>{{feature}}</td>
+            <td>{{resource}}</td>
+            <td>{{value}}</td>
+        </tr>
+    {{/infoResult}}
+    </tbody>
+</table>
