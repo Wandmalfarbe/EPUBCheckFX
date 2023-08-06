@@ -10,8 +10,8 @@ An unofficial graphical interface for the official [W3C EPUBCheck](https://www.w
 
 ## Installation / Usage
 
-[!IMPORTANT]  
-An installation of [Java 17](https://adoptium.net/) or later is required to run the application.
+> [!IMPORTANT]  
+> An installation of [Java 17](https://adoptium.net/) or later is required to run the application.
 
 The application EPUBCheckFX is provided as a runnable JAR. To start the application, simply
 double-click on the file `EPUBCheckFX-1.0.0.jar`.
