@@ -15,23 +15,23 @@
         <RowConstraints minHeight="22" />
     </rowConstraints>
     <children>
-        <Label text="File" styleClass="font-bold">
+        <Label text="%info_panel.file" styleClass="font-bold">
             <font>
                 <Font name="System Bold"/>
             </font>
         </Label>
-        <Label text="Title" styleClass="font-bold" GridPane.rowIndex="1">
+        <Label text="%info_panel.title" styleClass="font-bold" GridPane.rowIndex="1">
             <font>
                 <Font name="System Bold"/>
             </font>
         </Label>
-        <Label text="Author" styleClass="font-bold" GridPane.rowIndex="2">
+        <Label text="%info_panel.creator" styleClass="font-bold" GridPane.rowIndex="2">
             <font>
                 <Font name="System Bold"/>
             </font>
         </Label>
-        <Label text="Label" fx:id="file" GridPane.columnIndex="1"/>
-        <Label text="Label" fx:id="title" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        <Label text="Label" fx:id="author" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Label fx:id="file" GridPane.columnIndex="1"/>
+        <Label fx:id="title" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label fx:id="creator" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
     </children>
 </GridPane>

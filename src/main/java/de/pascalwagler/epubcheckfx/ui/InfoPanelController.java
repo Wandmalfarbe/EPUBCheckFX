@@ -1,5 +1,6 @@
 package de.pascalwagler.epubcheckfx.ui;
 
+import atlantafx.base.theme.Styles;
 import com.adobe.epubcheck.util.FeatureEnum;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,8 +11,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class InfoPanelController implements Initializable {
 
@@ -20,41 +21,58 @@ public class InfoPanelController implements Initializable {
     @FXML
     Label title;
     @FXML
-    Label author;
+    Label creator;
+
+    private ResourceBundle resourceBundle;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.resourceBundle = resources;
     }
 
     public void updateFromInfoList(Map<String, List<Pair<FeatureEnum, String>>> infoMap, File epubFile) {
+        file.setText(epubFile.getAbsolutePath());
 
         if (!infoMap.containsKey("general")) {
             System.out.println("No general info found.");
+            setTitle(null);
+            setCreator(null);
             return;
         }
 
         List<Pair<FeatureEnum, String>> generalInfoList = infoMap.get("general");
 
-        file.setText(epubFile.getAbsolutePath());
-
-        Optional<Pair<FeatureEnum, String>> dcTitle = generalInfoList.stream()
+        String title = generalInfoList.stream()
                 .filter(pair -> pair.getKey().equals(FeatureEnum.DC_TITLE))
-                .findFirst();
-        if (dcTitle.isPresent()) {
-            title.setText(dcTitle.get().getValue());
-        }
+                .findFirst()
+                .map(Pair::getValue)
+                .orElse(null);
+        setTitle(title);
 
-        Optional<Pair<FeatureEnum, String>> dcCreator = generalInfoList.stream()
+        List<String> creators = generalInfoList.stream()
                 .filter(pair -> pair.getKey().equals(FeatureEnum.DC_CREATOR))
-                .findFirst();
-        if (dcCreator.isPresent()) {
-            author.setText(dcCreator.get().getValue());
-        }
+                .map(Pair::getValue)
+                .collect(Collectors.toList());
+        setCreator(String.join(", ", creators));
     }
 
-    public void fill(String file, String title, String author) {
-        this.file.setText(file);
-        this.title.setText(title);
-        this.author.setText(author);
+    private void setTitle(String titleString) {
+        if (titleString == null) {
+            title.setText(resourceBundle.getString("info_panel.no_title"));
+            title.getStyleClass().add(Styles.TEXT_SUBTLE);
+            return;
+        }
+        title.getStyleClass().remove(Styles.TEXT_SUBTLE);
+        title.setText(titleString);
+    }
+
+    private void setCreator(String titleString) {
+        if (titleString == null) {
+            creator.setText(resourceBundle.getString("info_panel.no_creator"));
+            creator.getStyleClass().add(Styles.TEXT_SUBTLE);
+            return;
+        }
+        creator.getStyleClass().remove(Styles.TEXT_SUBTLE);
+        creator.setText(titleString);
     }
 }
