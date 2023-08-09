@@ -2,12 +2,12 @@ package de.pascalwagler.epubcheckfx.ui;
 
 import atlantafx.base.theme.Styles;
 import com.adobe.epubcheck.messages.Severity;
+import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import javafx.scene.control.TableCell;
 import javafx.util.Pair;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
-import de.pascalwagler.epubcheckfx.model.CheckMessage;
 
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -32,9 +32,9 @@ public class SeverityTableCell extends TableCell<CheckMessage, Severity> {
     }
 
     public static final Map<Severity, Pair<Ikon, String>> severityToIcon = Map.of(
-            Severity.SUPPRESSED, new Pair<>(Material2OutlinedAL.INFO, Styles.TEXT_MUTED),
+            Severity.SUPPRESSED, new Pair<>(Material2OutlinedAL.INFO, Styles.TEXT_SUBTLE),
             Severity.INFO, new Pair<>(Material2OutlinedAL.INFO, Styles.ACCENT),
-            Severity.USAGE, new Pair<>(Material2OutlinedAL.ERROR_OUTLINE, Styles.WARNING),
+            Severity.USAGE, new Pair<>(Material2OutlinedAL.INFO, Styles.TEXT_MUTED),
             Severity.WARNING, new Pair<>(Material2OutlinedAL.ERROR_OUTLINE, Styles.WARNING),
             Severity.ERROR, new Pair<>(Material2OutlinedAL.ERROR_OUTLINE, Styles.DANGER),
             Severity.FATAL, new Pair<>(Material2OutlinedAL.ERROR_OUTLINE, Styles.DANGER)

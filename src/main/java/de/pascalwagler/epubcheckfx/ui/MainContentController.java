@@ -1,7 +1,5 @@
 package de.pascalwagler.epubcheckfx.ui;
 
-import atlantafx.base.controls.Card;
-import atlantafx.base.controls.Tile;
 import com.adobe.epubcheck.api.EpubCheck;
 import com.adobe.epubcheck.messages.Severity;
 import com.adobe.epubcheck.util.Archive;
@@ -20,32 +18,23 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
+@Slf4j
 public class MainContentController implements Initializable {
 
     @FXML
@@ -64,15 +53,6 @@ public class MainContentController implements Initializable {
     private TableColumn<CheckMessage, Integer> column;
 
     @FXML
-    private TableView<InfoMessage> infoResultTable;
-    @FXML
-    private TreeTableColumn<InfoMessage, String> resource;
-    @FXML
-    private TreeTableColumn<InfoMessage, FeatureEnum> feature;
-    @FXML
-    private TreeTableColumn<InfoMessage, String> value;
-
-    @FXML
     private Label epubcheckVersion;
 
     @FXML
@@ -88,8 +68,6 @@ public class MainContentController implements Initializable {
     private File epubFile;
 
     @FXML
-    private TreeView<InfoMessage> infoTreeTableView;
-    @FXML
     private ScrollPane scrollMetadata;
     @FXML
     private ScrollPane scrollInfo;
@@ -102,62 +80,24 @@ public class MainContentController implements Initializable {
     @Setter
     private InfoPanelController infoPanelController;
 
-    private static File tempDirectory = new File(System.getProperty("java.io.tmpdir"), "EPUBCheckFX");
+    private static final File tempDirectory = new File(System.getProperty("java.io.tmpdir"), "EPUBCheckFX");
 
     @Override
     public void initialize(URL location, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
 
         try {
-            initTempDir();
+            if (!tempDirectory.exists()) {
+                Files.createDirectory(tempDirectory.toPath());
+            }
         } catch (IOException e) {
+            log.error("Unexpected Exception when creating the temporary directory.");
             throw new RuntimeException(e);
         }
         initValidationResultTable();
-        initInfoResultTable();
         initExportFormat();
         initEpubProfile();
         epubcheckVersion.setText("EPUBCheck Version " + EpubCheck.version() + " - (Built " + EpubCheck.buildDate() + ")");
-    }
-
-    private void initTempDir() throws IOException {
-        if (!tempDirectory.exists()) {
-            Files.createDirectory(tempDirectory.toPath());
-        }
-    }
-
-    private void initInfoResultTable() {
-
-        /*infoTreeTableView.setCellFactory(tv -> new TextFieldTreeCell<>(new StringConverter<>() {
-            @Override
-            public InfoMessage fromString(String text) {
-                return null;
-            }
-
-            @Override
-            public String toString(InfoMessage infoMessage) {
-                if(infoMessage.getResource() == null) {
-                    return infoMessage.getFeature() + ": " + infoMessage.getValue();
-                } else {
-                    return infoMessage.getResource();
-                }
-            }
-        }));*/
-
-
-        /*resource.setCellValueFactory(
-                cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getValue().getResource())
-        );
-        feature.setCellValueFactory(
-                cellDataFeatures -> new SimpleObjectProperty<FeatureEnum>(cellDataFeatures.getValue().getValue().getFeature())
-        );
-        value.setCellValueFactory(
-                cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getValue().getValue())
-        );*/
-
-        /*resource.setCellValueFactory(new PropertyValueFactory<>("resource"));
-        feature.setCellValueFactory(new PropertyValueFactory<>("feature"));
-        value.setCellValueFactory(new PropertyValueFactory<>("value"));*/
     }
 
     private void initValidationResultTable() {
@@ -220,34 +160,33 @@ public class MainContentController implements Initializable {
         customReport.infoList.clear();
 
         CompletableFuture.supplyAsync(() -> {
-            System.out.println("Start Validation");
+            try {
+                log.debug("Start Validation");
 
-            File epubToValidate;
-            if (epubFile.isDirectory()) {
-                try {
+                File epubToValidate;
+                if (epubFile.isDirectory()) {
                     epubToValidate = createTempEpubFromFolder();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                } else {
+                    epubToValidate = epubFile;
                 }
-            } else {
-                epubToValidate = epubFile;
+                EpubCheck epubcheck = new EpubCheck(epubToValidate, customReport, epubProfile.getValue().getEpubProfile());
+                epubcheck.check();
+
+                Map<String, List<Pair<FeatureEnum, String>>> infoMap = toMap();
+                Node metadataPane = UiHelper.createMetadataPane(infoMap, resourceBundle);
+                Node infoPane = UiHelper.createInfoPane(infoMap, resourceBundle);
+
+                Platform.runLater(() -> {
+                    scrollMetadata.setContent(metadataPane);
+                    scrollInfo.setContent(infoPane);
+                    infoPanelController.updateFromInfoList(infoMap, epubFile);
+                });
+            } catch (Exception exception) {
+                log.error("An unexpected error occurred during the validation.", exception);
+            } finally {
+                log.debug("End Validation");
+                mainWindowController.validationDone();
             }
-            EpubCheck epubcheck = new EpubCheck(epubToValidate, customReport, epubProfile.getValue().getEpubProfile());
-            epubcheck.check();
-
-            Map<String, List<Pair<FeatureEnum, String>>> infoMap = toMap();
-            Node metadataPane = createMetadataPane(infoMap);
-            Node infoPane = createInfoPane(infoMap);
-
-            Platform.runLater(() -> {
-                scrollMetadata.setContent(metadataPane);
-                scrollInfo.setContent(infoPane);
-                infoPanelController.updateFromInfoList(infoMap, epubFile);
-            });
-
-            System.out.println("End Validation");
-            mainWindowController.validationDone();
-            //Desktop.getDesktop().browseFileDirectory(epubFile);
             return null;
         });
     }
@@ -262,155 +201,6 @@ public class MainContentController implements Initializable {
 
         epub.createArchive(temporaryEpubFile);
         return temporaryEpubFile;
-    }
-
-    private Node createInfoPane(Map<String, List<Pair<FeatureEnum, String>>> infoMap) {
-        VBox vBox = new VBox();
-        vBox.setPadding(new Insets(10, 0, 0, 0));
-        vBox.setSpacing(10);
-
-        for (Map.Entry<String, List<Pair<FeatureEnum, String>>> entry : infoMap.entrySet()) {
-            String resource = entry.getKey();
-
-            // Skip the general section because it is already displayed unter the metadata tab.
-            if ("general".equals(resource)) {
-                continue;
-            }
-            List<Pair<FeatureEnum, String>> features = entry.getValue();
-
-            Card card = new Card();
-            VBox.setVgrow(card, Priority.ALWAYS);
-            card.setHeader(new Tile(resource, null));
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(5);
-            ColumnConstraints col1 = new ColumnConstraints();
-            col1.setHalignment(HPos.RIGHT);
-            col1.setHgrow(Priority.NEVER);
-            col1.setPrefWidth(180);
-            ColumnConstraints col2 = new ColumnConstraints();
-            col2.setHgrow(Priority.ALWAYS);
-            grid.getColumnConstraints().addAll(col1, col2);
-            for (int i = 0; i < features.size(); i++) {
-                Pair<FeatureEnum, String> pair = features.get(i);
-
-                String featureEnumName = pair.getKey().name().toLowerCase();
-                String labelTranslated;
-                if (resourceBundle.containsKey("feature." + featureEnumName)) {
-                    labelTranslated = resourceBundle.getString("feature." + featureEnumName);
-                } else {
-                    labelTranslated = pair.getKey().toString();
-                }
-                Label label = new Label(labelTranslated);
-                label.setWrapText(true);
-                label.getStyleClass().add("font-bold");
-
-                TextField value = new TextField(pair.getValue());
-                value.setEditable(false);
-
-                Node[] row = new Node[]{label, value};
-                grid.addRow(i, row);
-            }
-            card.setBody(grid);
-            vBox.getChildren().add(card);
-        }
-        return vBox;
-    }
-
-    private Node createMetadataPane(Map<String, List<Pair<FeatureEnum, String>>> infoMap) {
-        VBox vBox = new VBox();
-        vBox.setPadding(new Insets(10, 0, 0, 0));
-        vBox.setSpacing(10);
-
-        List<Pair<FeatureEnum, String>> metadata = infoMap.get("general");
-        if (metadata == null) {
-            return vBox;
-        }
-
-        List<Pair<FeatureEnum, String>> dublinCoreMetadata = metadata.stream()
-                .filter(m -> m.getKey().name().toLowerCase().startsWith("dc_"))
-                .collect(Collectors.toList());
-        List<Pair<FeatureEnum, String>> otherMetadata = metadata.stream()
-                .filter(m -> !m.getKey().name().toLowerCase().startsWith("dc_"))
-                .collect(Collectors.toList());
-
-        List<List<Pair<FeatureEnum, String>>> metadataGroups = List.of(dublinCoreMetadata, otherMetadata);
-
-        for (List<Pair<FeatureEnum, String>> metadataGroup : metadataGroups) {
-            if (metadataGroup.isEmpty()) {
-                continue;
-            }
-
-            Card card = new Card();
-            VBox.setVgrow(card, Priority.ALWAYS);
-            card.setHeader(new Tile(resourceBundle.getString("metadata.dublin_core"), null));
-
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(5);
-
-            ColumnConstraints col1 = new ColumnConstraints();
-            col1.setHalignment(HPos.RIGHT);
-            col1.setHgrow(Priority.NEVER);
-            col1.setPrefWidth(180);
-            ColumnConstraints col2 = new ColumnConstraints();
-            col2.setHgrow(Priority.ALWAYS);
-            grid.getColumnConstraints().addAll(col1, col2);
-
-            for (int i = 0; i < metadataGroup.size(); i++) {
-                Pair<FeatureEnum, String> pair = metadataGroup.get(i);
-
-                String featureEnumName = pair.getKey().name().toLowerCase();
-                String labelTranslated;
-                if (resourceBundle.containsKey("feature." + featureEnumName)) {
-                    labelTranslated = resourceBundle.getString("feature." + featureEnumName);
-                } else {
-                    labelTranslated = pair.getKey().toString();
-                }
-                Label label = new Label(labelTranslated);
-                label.setWrapText(true);
-                label.getStyleClass().add("font-bold");
-
-                TextField value = new TextField(pair.getValue());
-                value.setEditable(false);
-
-                Node[] row = new Node[]{label, value};
-                grid.addRow(i, row);
-            }
-            card.setBody(grid);
-            vBox.getChildren().add(card);
-        }
-
-        return vBox;
-    }
-
-    private static TreeItem<InfoMessage> toTreeItem(Map<String, List<Pair<FeatureEnum, String>>> infos) {
-        TreeItem<InfoMessage> root = new TreeItem<>();
-        root.setValue(InfoMessage.builder().build());
-        for (Map.Entry<String, List<Pair<FeatureEnum, String>>> entry : infos.entrySet()) {
-            String resource = entry.getKey();
-            List<Pair<FeatureEnum, String>> features = entry.getValue();
-
-            InfoMessage innerInfo = InfoMessage.builder()
-                    .resource(resource)
-                    .build();
-            TreeItem<InfoMessage> innerItem = new TreeItem<>();
-            innerItem.setValue(innerInfo);
-            root.getChildren().add(innerItem);
-
-            for (Pair<FeatureEnum, String> feature : features) {
-                InfoMessage leafInfo = InfoMessage.builder()
-                        .feature(feature.getKey())
-                        .value(feature.getValue())
-                        .build();
-                TreeItem<InfoMessage> leafItem = new TreeItem<>();
-                leafItem.setValue(leafInfo);
-                innerItem.getChildren().add(leafItem);
-            }
-        }
-        //Platform.runLater(() -> infoTreeTableView.setRoot(root));
-
-        return root;
     }
 
     private Map<String, List<Pair<FeatureEnum, String>>> toMap() {

@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.util.Pair;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.net.URL;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class InfoPanelController implements Initializable {
 
     @FXML
@@ -34,7 +36,7 @@ public class InfoPanelController implements Initializable {
         file.setText(epubFile.getAbsolutePath());
 
         if (!infoMap.containsKey("general")) {
-            System.out.println("No general info found.");
+            log.info("No general info found");
             setTitle(null);
             setCreator(null);
             return;
@@ -42,12 +44,12 @@ public class InfoPanelController implements Initializable {
 
         List<Pair<FeatureEnum, String>> generalInfoList = infoMap.get("general");
 
-        String title = generalInfoList.stream()
+        String titleString = generalInfoList.stream()
                 .filter(pair -> pair.getKey().equals(FeatureEnum.DC_TITLE))
                 .findFirst()
                 .map(Pair::getValue)
                 .orElse(null);
-        setTitle(title);
+        setTitle(titleString);
 
         List<String> creators = generalInfoList.stream()
                 .filter(pair -> pair.getKey().equals(FeatureEnum.DC_CREATOR))

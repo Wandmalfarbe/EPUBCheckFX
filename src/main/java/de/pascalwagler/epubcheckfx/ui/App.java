@@ -1,7 +1,5 @@
 package de.pascalwagler.epubcheckfx.ui;
 
-import atlantafx.base.theme.CupertinoDark;
-import atlantafx.base.theme.CupertinoLight;
 import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,11 +7,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+@Slf4j
 public class App extends Application {
 
     public static void main(String[] args) {
@@ -25,15 +25,10 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Locale.setDefault(locale);
+        log.info("Java Version: " + System.getProperty("java.version"));
+        log.info("JavaFX Version: " + System.getProperty("javafx.version"));
 
-        String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
-
-        System.out.println("Java Version: " + javaVersion);
-        System.out.println("JavaFX Version: " + javafxVersion);
-
-        Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 
         ResourceBundle bundle = ResourceBundle.getBundle("i18n.LangBundle", locale);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainWindow.fxml"), bundle);
