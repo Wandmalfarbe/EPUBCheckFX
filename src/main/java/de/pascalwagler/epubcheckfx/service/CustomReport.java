@@ -11,9 +11,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.File;
+import java.util.Locale;
 
 public class CustomReport implements Report {
-    private final LocalizedMessages localizedMessages = new LocalizedMessages(App.locale);
+    private final LocalizedMessages localizedMessages = new LocalizedMessages(Locale.getDefault());
 
     public final ObservableList<InfoMessage> infoList = FXCollections.observableArrayList();
     public final ObservableList<CheckMessage> errorList = FXCollections.observableArrayList();
