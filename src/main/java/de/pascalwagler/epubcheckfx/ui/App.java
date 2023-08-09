@@ -20,8 +20,6 @@ public class App extends Application {
         Application.launch(args);
     }
 
-    public static final Locale locale = Locale.GERMAN;
-
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -30,7 +28,7 @@ public class App extends Application {
 
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 
-        ResourceBundle bundle = ResourceBundle.getBundle("i18n.LangBundle", locale);
+        ResourceBundle bundle = ResourceBundle.getBundle("i18n.LangBundle", Locale.getDefault());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainWindow.fxml"), bundle);
         Parent root = loader.load();
 
