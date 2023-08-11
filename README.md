@@ -28,7 +28,7 @@ Please refer to the EPUBCheck documentation at https://www.w3.org/publishing/epu
 
 ## Build / Development
 
-Install the requited dependencies:
+Install the required dependencies:
 
 * [Java 17](https://adoptium.net/)
 * [Apache Maven](https://maven.apache.org/)
@@ -45,7 +45,6 @@ mvn clean package
 - There is no native installer or native executable available (EXE, DMG, etc.).
 - It is not really possible to cancel the validation despite there being a cancel button. The button just closes the progress overlay but the validation still continues.
 - It is not possible to select an EPUB folder with the button on the start page. One can however drag an EPUB folder on the window to validate it.
-- All validation results are shown, even if some severity levels should be hidden by default (e.g. the severity level *Usage*).
 
 ## Credits
 
