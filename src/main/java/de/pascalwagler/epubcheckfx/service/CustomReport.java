@@ -6,7 +6,6 @@ import com.adobe.epubcheck.messages.*;
 import com.adobe.epubcheck.util.FeatureEnum;
 import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import de.pascalwagler.epubcheckfx.model.InfoMessage;
-import de.pascalwagler.epubcheckfx.ui.App;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
