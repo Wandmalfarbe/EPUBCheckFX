@@ -17,6 +17,21 @@
                                     <padding>
                                         <Insets top="10.0"/>
                                     </padding>
+                                    <HBox alignment="BASELINE_CENTER" prefHeight="0.0" prefWidth="200.0" spacing="10.0">
+                                        <padding>
+                                            <Insets bottom="10.0"/>
+                                        </padding>
+                                        <children>
+                                            <TextField fx:id="resultTableSearchFilter" promptText="%result_table.filter.search" HBox.hgrow="ALWAYS"/>
+                                            <Label text="%result_table.column_severity"/>
+                                            <ComboBox fx:id="resultTableSeverityFilter"/>
+                                            <Button mnemonicParsing="false" onAction="#clearFilter" text="%result_table.filter.clear">
+                                                <graphic>
+                                                    <FontIcon iconLiteral="mdoal-clear" iconSize="64"/>
+                                                </graphic>
+                                            </Button>
+                                        </children>
+                                    </HBox>
                                     <TableView fx:id="validationResultTable" styleClass="striped" VBox.vgrow="ALWAYS">
                                         <columnResizePolicy>
                                             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -67,11 +82,12 @@
         </VBox>
     </center>
     <bottom>
-        <HBox alignment="BOTTOM_LEFT" prefHeight="0.0" prefWidth="200.0" spacing="10.0"
+        <HBox alignment="BASELINE_CENTER" prefHeight="0.0" prefWidth="200.0" spacing="10.0"
               BorderPane.alignment="CENTER_LEFT">
             <children>
                 <Label fx:id="epubcheckVersion" text="Input"/>
                 <Pane prefHeight="0" prefWidth="0" HBox.hgrow="ALWAYS"/>
+                <Label text="%export_format"/>
                 <ComboBox fx:id="exportFormat"/>
                 <Button mnemonicParsing="false" onAction="#export" text="%export">
                     <graphic>

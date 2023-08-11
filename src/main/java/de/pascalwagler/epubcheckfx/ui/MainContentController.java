@@ -16,6 +16,8 @@ import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -33,6 +35,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 @Slf4j
 public class MainContentController implements Initializable {
@@ -59,6 +62,11 @@ public class MainContentController implements Initializable {
     private ComboBox<EpubProfile> epubProfile;
 
     @FXML
+    private TextField resultTableSearchFilter;
+    @FXML
+    private ComboBox<de.pascalwagler.epubcheckfx.model.Severity> resultTableSeverityFilter;
+
+    @FXML
     private ComboBox<ExportFormat> exportFormat;
 
     private final CustomReport customReport = new CustomReport();
@@ -80,6 +88,8 @@ public class MainContentController implements Initializable {
     @Setter
     private InfoPanelController infoPanelController;
 
+    private FilteredList<CheckMessage> filteredErrorList;
+
     private static final File tempDirectory = new File(System.getProperty("java.io.tmpdir"), "EPUBCheckFX");
 
     @Override
@@ -95,14 +105,60 @@ public class MainContentController implements Initializable {
             throw new RuntimeException(e);
         }
         initValidationResultTable();
+        initSeverityFilter();
         initExportFormat();
         initEpubProfile();
         epubcheckVersion.setText("EPUBCheck Version " + EpubCheck.version() + " - (Built " + EpubCheck.buildDate() + ")");
     }
 
+    private Predicate<CheckMessage> tableFilterPredicate(String search, Severity severity) {
+        String searchLower = search.toLowerCase();
+        return checkMessage -> {
+
+            boolean matchesLine = checkMessage.getLine() != null && checkMessage.getLine().toString().contains(searchLower);
+            boolean matchesColumn = checkMessage.getColumn() != null && checkMessage.getColumn().toString().contains(searchLower);
+
+            boolean matchesSearchString =
+                    "".equals(search) // Special case: The empty search matches always.
+                            || checkMessage.getMessageId().toString().toLowerCase().contains(searchLower)
+                            || checkMessage.getMessage().toLowerCase().contains(searchLower)
+                            || checkMessage.getSeverity().toString().contains(searchLower)
+                            || checkMessage.getPath().contains(searchLower)
+                            || matchesLine
+                            || matchesColumn;
+            return matchesSearchString && isGreaterOrEqualSeverity(checkMessage.getSeverity(), severity);
+        };
+    }
+
+    private boolean isGreaterOrEqualSeverity(Severity a, Severity b) {
+        return a.toInt() >= b.toInt();
+    }
+
+    public void clearFilter(ActionEvent actionEvent) {
+        resultTableSearchFilter.setText("");
+        resultTableSeverityFilter.getSelectionModel().select(de.pascalwagler.epubcheckfx.model.Severity.INFO);
+    }
+
     private void initValidationResultTable() {
 
-        Property<ObservableList<CheckMessage>> authorListProperty = new SimpleObjectProperty<>(customReport.errorList);
+        resultTableSearchFilter.textProperty().addListener((observable, oldValue, newValue) -> {
+            log.info("search changed from " + oldValue + " to " + newValue);
+            if (Objects.equals(oldValue, newValue)) {
+                return;
+            }
+            filteredErrorList.setPredicate(tableFilterPredicate(newValue, resultTableSeverityFilter.getValue().getEbubcheckSeverity()));
+        });
+
+        resultTableSeverityFilter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            log.info("severity changed from " + oldValue + " to " + newValue);
+            if (Objects.equals(oldValue, newValue)) {
+                return;
+            }
+            filteredErrorList.setPredicate(tableFilterPredicate(resultTableSearchFilter.getText(), newValue.getEbubcheckSeverity()));
+        });
+
+        filteredErrorList = customReport.errorList.filtered(checkMessage -> true);
+        Property<ObservableList<CheckMessage>> authorListProperty = new SimpleObjectProperty<>(filteredErrorList);
         validationResultTable.itemsProperty().bind(authorListProperty);
 
         messageId.setCellValueFactory(new PropertyValueFactory<>("messageId"));
@@ -123,6 +179,20 @@ public class MainContentController implements Initializable {
         text.wrappingWidthProperty().bind(tableColumn.widthProperty().subtract(20));
         text.textProperty().bind(cell.itemProperty());
         return cell;
+    }
+
+    private void initSeverityFilter() {
+        resultTableSeverityFilter.setCellFactory(listView -> new TranslatableListCell<>(resourceBundle));
+        resultTableSeverityFilter.getItems().addAll(
+                de.pascalwagler.epubcheckfx.model.Severity.SUPPRESSED,
+                de.pascalwagler.epubcheckfx.model.Severity.USAGE,
+                de.pascalwagler.epubcheckfx.model.Severity.INFO,
+                de.pascalwagler.epubcheckfx.model.Severity.WARNING,
+                de.pascalwagler.epubcheckfx.model.Severity.ERROR,
+                de.pascalwagler.epubcheckfx.model.Severity.FATAL
+        );
+        resultTableSeverityFilter.setButtonCell(resultTableSeverityFilter.getCellFactory().call(null));
+        resultTableSeverityFilter.getSelectionModel().select(de.pascalwagler.epubcheckfx.model.Severity.INFO);
     }
 
     private void initExportFormat() {
