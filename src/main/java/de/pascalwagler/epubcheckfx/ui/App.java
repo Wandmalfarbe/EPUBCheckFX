@@ -23,7 +23,7 @@ public class App extends Application {
         Application.launch(args);
     }
 
-    final OsThemeDetector detector = OsThemeDetector.getDetector();
+    private final OsThemeDetector detector = OsThemeDetector.getDetector();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -80,7 +80,7 @@ public class App extends Application {
         }
 
         detector.registerListener(isDark -> Platform.runLater(() -> {
-            if (isDark) {
+            if (Boolean.TRUE.equals(isDark)) {
                 Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
             } else {
                 Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
