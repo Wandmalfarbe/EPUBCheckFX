@@ -23,6 +23,14 @@
         <project.assembly.sourceDir>${project.basedir}/src/main/assembly</project.assembly.sourceDir>
     </properties>
 
+    <!-- for com.github.Dansoftowner:jSystemThemeDetector -->
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- build cross-platform fat JAR -->
         <!-- see https://github.com/openjfx/javafx-maven-plugin/issues/58 and https://github.com/betanzos/cross-platform-app-fx -->
@@ -189,7 +197,11 @@
             <artifactId>logback-classic</artifactId>
             <version>1.4.9</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.Dansoftowner</groupId>
+            <artifactId>jSystemThemeDetector</artifactId>
+            <version>3.8</version>
+        </dependency>
         <dependency>
             <groupId>io.github.mkpaz</groupId>
             <artifactId>atlantafx-base</artifactId>

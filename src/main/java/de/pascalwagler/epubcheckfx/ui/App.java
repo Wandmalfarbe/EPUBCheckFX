@@ -1,7 +1,10 @@
 package de.pascalwagler.epubcheckfx.ui;
 
+import atlantafx.base.theme.PrimerDark;
 import atlantafx.base.theme.PrimerLight;
+import com.jthemedetecor.OsThemeDetector;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,21 +23,30 @@ public class App extends Application {
         Application.launch(args);
     }
 
+    final OsThemeDetector detector = OsThemeDetector.getDetector();
+
     @Override
     public void start(Stage stage) throws Exception {
 
         log.info("Java Version: " + System.getProperty("java.version"));
         log.info("JavaFX Version: " + System.getProperty("javafx.version"));
 
-        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-
         ResourceBundle bundle = ResourceBundle.getBundle("i18n.LangBundle", Locale.getDefault());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainWindow.fxml"), bundle);
         Parent root = loader.load();
-
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("/css/style.css");
 
+        applyTheme(scene);
+        applyIcon(stage);
+
+        stage.setTitle(bundle.getString("app.name"));
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void applyIcon(Stage stage) {
+
+        // app icons
         stage.getIcons().add(new Image("/img/icons/icon_16x16.png"));
         stage.getIcons().add(new Image("/img/icons/icon_20x20.png"));
         stage.getIcons().add(new Image("/img/icons/icon_32x32.png"));
@@ -45,6 +57,7 @@ public class App extends Application {
         stage.getIcons().add(new Image("/img/icons/icon_256x256.png"));
         stage.getIcons().add(new Image("/img/icons/icon_512x512.png"));
 
+        // taskbar icons
         if (Taskbar.isTaskbarSupported()) {
             var taskbar = Taskbar.getTaskbar();
             if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
@@ -53,9 +66,27 @@ public class App extends Application {
                 taskbar.setIconImage(dockIcon);
             }
         }
+    }
 
-        stage.setTitle(bundle.getString("app.name"));
-        stage.setScene(scene);
-        stage.show();
+    private void applyTheme(Scene scene) {
+
+        // The theme detection code currently logs a NullPointerException
+        // (see https://github.com/Dansoftowner/jSystemThemeDetector/issues/18).
+
+        if (detector.isDark()) {
+            Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        } else {
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        }
+
+        detector.registerListener(isDark -> Platform.runLater(() -> {
+            if (isDark) {
+                Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+            } else {
+                Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+            }
+        }));
+
+        scene.getStylesheets().add("/css/style.css");
     }
 }
