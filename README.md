@@ -4,9 +4,11 @@
 
 An unofficial graphical interface for the official [W3C EPUBCheck](https://www.w3.org/publishing/epubcheck/) conformance checker.
 
-## Preview
+## Screenshots
 
-![EPUBCheckFX Screenshot](img/EPUBCheckFX-Screenshot.png)
+![EPUBCheckFX Screenshot Light Mode](img/EPUBCheckFX-Screenshot-Light.png)
+
+![EPUBCheckFX Screenshot Dark Mode](img/EPUBCheckFX-Screenshot-Dark.png)
 
 ## Installation / Usage
 
