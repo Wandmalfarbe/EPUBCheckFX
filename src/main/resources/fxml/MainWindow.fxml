@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.ProgressIndicator?>
-<StackPane fx:id="stackPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1"
+<StackPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.pascalwagler.epubcheckfx.ui.MainWindowController"
            onDragDropped="#onDragDropped" onDragEntered="#onDragEntered" onDragExited="#onDragExited"
            onDragOver="#onDragOver">

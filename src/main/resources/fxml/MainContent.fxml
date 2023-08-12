@@ -58,13 +58,6 @@
                             <content>
                                 <ScrollPane fx:id="scrollMetadata" fitToWidth="true">
                                 </ScrollPane>
-                                <!--<TreeView fx:id="infoTreeTableView" showRoot="false" prefHeight="200.0" prefWidth="200.0" styleClass="striped">
-                                    <columns>
-                                        <TreeTableColumn fx:id="resource" text="%info_table.column_resource" />
-                                        <TreeTableColumn fx:id="feature" text="%info_table.column_feature" />
-                                        <TreeTableColumn fx:id="value" text="%info_table.column_value" />
-                                    </columns>
-                                </TreeView>-->
                             </content>
                         </Tab>
                         <Tab text="%result_tab.info">
