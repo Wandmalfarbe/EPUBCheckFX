@@ -15,14 +15,29 @@ An unofficial graphical interface for the official [W3C EPUBCheck](https://www.w
 > [!IMPORTANT]  
 > An installation of [Java 17](https://adoptium.net/) or later is required to run the application.
 
-The application EPUBCheckFX is provided as a runnable JAR. To start the application, simply
-double-click on the file `EPUBCheckFX-1.0.0.jar`.
+Download the correct version of the application for your operating system on the [releases page](https://github.com/Wandmalfarbe/EPUBCheckFX/releases).
 
-One can also start the application from the command line by executing the following command:
+### Windows
 
-``` shell
-java -jar EPUBCheckFX-1.0.0.jar
-```
+1. Extract the downloaded ZIP file.
+2. Double-click the extracted executable `EPUBCheckFX.exe`.
+
+### macOS
+
+1. Double-click the downloaded disk image (DMG file).
+2. Drag the application `EPUBCheckFX` into the `Application` folder.
+3. Start the application `EPUBCheckFX` from the `Application` folder by double-clicking.
+
+### Linux
+
+1. Extract the downloaded tar.gz archive by executing `tar -zxvf EPUBCheckFX-x.x.x-linux.tar.gz` in the terminal (where `x.x.x` is the current version number).
+2. Start the application by double-clicking on the file `EPUBCheckFX-x.x.x.jar`.
+
+    One can also start the application from the command line by executing the following command:
+
+    ``` shell
+    java -jar EPUBCheckFX-x.x.x.jar
+    ```
 
 ## Documentation
 
@@ -44,7 +59,6 @@ mvn clean package
 ## Known Issues / Bugs
 
 - The App is only translated in English and German.
-- There is no native installer or native executable available (EXE, DMG, etc.).
 - It is not really possible to cancel the validation despite there being a cancel button. The button just closes the progress overlay but the validation still continues.
 - It is not possible to select an EPUB folder with the button on the start page. One can however drag an EPUB folder on the window to validate it.
 
