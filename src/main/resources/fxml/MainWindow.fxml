@@ -6,7 +6,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.ProgressIndicator?>
-<StackPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1"
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<StackPane prefHeight="700" prefWidth="900" xmlns="http://javafx.com/javafx/20.0.1"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.pascalwagler.epubcheckfx.ui.MainWindowController"
            onDragDropped="#onDragDropped" onDragEntered="#onDragEntered" onDragExited="#onDragExited"
            onDragOver="#onDragOver">
@@ -24,13 +25,17 @@
                             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                             AnchorPane.bottomAnchor="0.0">
                     <children>
-                        <VBox alignment="CENTER" layoutX="20.0" layoutY="69.5" prefWidth="60.0" spacing="10.0"
+                        <VBox alignment="CENTER" layoutX="20.0" layoutY="69.5" prefWidth="60.0" spacing="20.0"
                               fx:id="dropArea" styleClass="drop-area" AnchorPane.bottomAnchor="20.0"
                               AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"
                               AnchorPane.topAnchor="20.0">
                             <children>
-                                <Label text="%drag_and_drop.drag_here"/>
-                                <Button mnemonicParsing="false" text="%drag_and_drop.browse" onAction="#chooseFile"/>
+                                <HBox alignment="CENTER" spacing="20.0">
+                                    <FontIcon iconLiteral="mdoal-insert_drive_file" styleClass="icon-large" iconSize="64"/>
+                                    <FontIcon iconLiteral="mdal-folder_open" styleClass="icon-large" iconSize="64"/>
+                                </HBox>
+                                <Label text="%drag_and_drop.drag_here" styleClass="title-4"/>
+                                <Button mnemonicParsing="false" text="%drag_and_drop.browse" styleClass="large" defaultButton="true" onAction="#chooseFile"/>
                             </children>
                             <padding>
                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
