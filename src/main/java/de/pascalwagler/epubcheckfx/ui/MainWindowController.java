@@ -71,7 +71,7 @@ public class MainWindowController implements Initializable {
     }
 
     @FXML
-    private void chooseFile() {
+    public void chooseFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));

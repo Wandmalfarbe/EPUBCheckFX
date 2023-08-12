@@ -225,6 +225,11 @@ public class MainContentController implements Initializable {
     }
 
     @FXML
+    public void chooseFile() {
+        mainWindowController.chooseFile();
+    }
+
+    @FXML
     private void runEpubCheck() {
         customReport.errorList.clear();
         customReport.infoList.clear();

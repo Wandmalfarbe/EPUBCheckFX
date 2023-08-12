@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1"
+<BorderPane xmlns="http://javafx.com/javafx/20.0.1"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.pascalwagler.epubcheckfx.ui.MainContentController">
     <center>
         <VBox alignment="CENTER" prefHeight="400.0" BorderPane.alignment="CENTER">
@@ -99,13 +99,25 @@
                 <HBox spacing="10.0">
                     <children>
                         <fx:include fx:id="infoPanel" source="InfoPanel.fxml" HBox.hgrow="ALWAYS"/>
-                        <VBox spacing="10.0">
+                        <VBox>
+                            <HBox spacing="10.0">
+                                <Button mnemonicParsing="false" defaultButton="true" onAction="#chooseFile" text="%open" HBox.hgrow="ALWAYS">
+                                    <graphic>
+                                        <FontIcon iconLiteral="mdal-folder_open" iconSize="64"/>
+                                    </graphic>
+                                </Button>
+                                <Button mnemonicParsing="false" onAction="#runEpubCheck" text="%re_validate" HBox.hgrow="ALWAYS">
+                                    <graphic>
+                                        <FontIcon iconLiteral="mdmz-refresh" iconSize="64"/>
+                                    </graphic>
+                                </Button>
+                            </HBox>
+                            <Label text="%epub_profile">
+                                <VBox.margin>
+                                    <Insets bottom="10.0" top="15.0"/>
+                                </VBox.margin>
+                            </Label>
                             <ComboBox fx:id="epubProfile"/>
-                            <Button mnemonicParsing="false" onAction="#runEpubCheck" text="%re_validate">
-                                <graphic>
-                                    <FontIcon iconLiteral="mdmz-refresh" iconSize="64"/>
-                                </graphic>
-                            </Button>
                         </VBox>
                     </children>
                 </HBox>
