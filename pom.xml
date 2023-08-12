@@ -335,7 +335,8 @@
             </plugin>
 
             <!-- create macOS app and disk image -->
-            <plugin>
+            <!-- This plugin can only be run on macOS, so it is disabled for now. -->
+            <!--<plugin>
                 <groupId>de.perdian.maven.plugins</groupId>
                 <artifactId>macosappbundler-maven-plugin</artifactId>
                 <version>1.19.0</version>
@@ -361,7 +362,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
             <!-- create packages (ZIP files) for Windows and Linux -->
             <plugin>

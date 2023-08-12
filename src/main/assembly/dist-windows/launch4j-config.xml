@@ -3,7 +3,8 @@
     <dontWrapJar>false</dontWrapJar>
     <headerType>gui</headerType>
 
-    <jar>../../target/EPUBCheckFX.jar</jar>
+    <!-- This property needs to be present but is ignored because the JAR name is configured in the POM. -->
+    <jar>placeholder</jar>
     <outfile>../../target/EPUBCheckFX.exe</outfile>
 
     <priority>normal</priority>
