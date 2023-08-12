@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+    <dontWrapJar>false</dontWrapJar>
+    <headerType>gui</headerType>
+
+    <jar>../../target/EPUBCheckFX.jar</jar>
+    <outfile>../../target/EPUBCheckFX.exe</outfile>
+
+    <priority>normal</priority>
+    <downloadUrl>https://adoptium.net/</downloadUrl>
+    <stayAlive>true</stayAlive>
+    <restartOnCrash>false</restartOnCrash>
+    <!--<icon>icon.ico</icon>-->
+    <singleInstance>
+        <mutexName>de.pascalwagler.epubcheckfx</mutexName>
+        <windowTitle>EPUBCheckFX</windowTitle>
+    </singleInstance>
+    <jre>
+        <bundledJre64Bit>false</bundledJre64Bit>
+        <bundledJreAsFallback>false</bundledJreAsFallback>
+        <minVersion>17</minVersion>
+        <jdkPreference>preferJre</jdkPreference>
+        <runtimeBits>64/32</runtimeBits>
+        <opt>-Xss1024k</opt>
+    </jre>
+    <versionInfo>
+        <fileVersion>1.0.0.1</fileVersion>
+        <txtFileVersion>1.0.0</txtFileVersion>
+        <productVersion>1.0.0.1</productVersion>
+        <txtProductVersion>1.0.0</txtProductVersion>
+
+        <fileDescription>EPUBCheckFX</fileDescription>
+        <copyright>Pascal Wagler</copyright>
+        <productName>EPUBCheckFX</productName>
+        <internalName>EPUBCheckFX</internalName>
+        <originalFilename>EPUBCheckFX.exe</originalFilename>
+        <language>ENGLISH_US</language>
+    </versionInfo>
+    <messages>
+        <startupErr>An error occurred while starting the application.</startupErr>
+        <jreNotFoundErr>This application was configured to use a bundled Java Runtime Environment but the runtime is missing or corrupted.</jreNotFoundErr>
+        <jreVersionErr>This application requires a Java Runtime Environment.</jreVersionErr>
+        <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.</launcherErr>
+        <instanceAlreadyExistsMsg>An application instance is already running.</instanceAlreadyExistsMsg>
+    </messages>
+</launch4jConfig>

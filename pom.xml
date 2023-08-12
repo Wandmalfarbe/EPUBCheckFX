@@ -8,6 +8,9 @@
     <name>EPUBCheckFX</name>
     <description>A graphical interface for EPUBCheck.</description>
     <inceptionYear>2023</inceptionYear>
+    <organization>
+        <name>Pascal Wagler</name>
+    </organization>
 
     <packaging>jar</packaging>
 
@@ -20,7 +23,10 @@
         <ikonli.version>12.3.1</ikonli.version>
 
         <main.class>de.pascalwagler.epubcheckfx.ui.App</main.class>
+
         <project.assembly.sourceDir>${project.basedir}/src/main/assembly</project.assembly.sourceDir>
+        <project.notRunnableJar.name>${project.name}-${project.version}-not-runnable.jar</project.notRunnableJar.name>
+        <project.multiplatformJar.name>${project.name}-${project.version}.jar</project.multiplatformJar.name>
     </properties>
 
     <!-- for com.github.Dansoftowner:jSystemThemeDetector -->
@@ -235,6 +241,8 @@
     </dependencies>
 
     <build>
+        <finalName>${project.notRunnableJar.name}</finalName>
+
         <plugins>
 
             <plugin>
@@ -279,7 +287,7 @@
                         <configuration>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>project-classifier</shadedClassifierName>
-                            <outputFile>${project.build.directory}/${project.name}-fat-jar.jar</outputFile>
+                            <outputFile>${project.build.directory}/${project.multiplatformJar.name}</outputFile>
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -306,8 +314,7 @@
             </plugin>
 
             <!-- create windows executable -->
-            <!-- TODO: There has to be a universal fat JAR for the Windows build -->
-            <!--<plugin>
+            <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
                 <version>2.4.1</version>
@@ -320,30 +327,30 @@
                         </goals>
                         <configuration>
                             <infile>${project.assembly.sourceDir}/dist-windows/launch4j-config.xml</infile>
-                            <jar>${project.build.directory}/${project.name}-fat-jar.jar</jar>
+                            <jar>${project.build.directory}/${project.multiplatformJar.name}</jar>
                             <outfile>${project.build.directory}/${project.name}.exe</outfile>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
             <!-- create macOS app and disk image -->
-            <!-- TODO: There has to be a universal fat JAR for the Windows build -->
-            <!--<plugin>
+            <plugin>
                 <groupId>de.perdian.maven.plugins</groupId>
                 <artifactId>macosappbundler-maven-plugin</artifactId>
                 <version>1.19.0</version>
                 <configuration>
                     <plist>
                         <CFBundleIconFile>src/main/assembly/dist-macos/EPUBCheckFX.icns</CFBundleIconFile>
-                        <NSHumanReadableCopyright>Copyright © 2023 Pascal Wagler. All rights reserved.</NSHumanReadableCopyright>
+                        <NSHumanReadableCopyright>Copyright © 2023 Pascal Wagler. All rights reserved.
+                        </NSHumanReadableCopyright>
 
                         <JVMMainClassName>de.pascalwagler.epubcheckfx.ui.Launcher</JVMMainClassName>
                     </plist>
                     <dmg>
                         <generate>true</generate>
                         <appendVersion>false</appendVersion>
-                        <dmgFileName>${project.name}-${project.version}</dmgFileName>
+                        <dmgFileName>${project.name}-${project.version}-macOS</dmgFileName>
                     </dmg>
                 </configuration>
                 <executions>
@@ -354,10 +361,10 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
-            <!-- create packages for Windows and Linux -->
-            <!--<plugin>
+            <!-- create packages (ZIP files) for Windows and Linux -->
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
@@ -370,8 +377,10 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <finalName>${project.name}-${project.version}-linux</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
-                                <descriptor>${project.assembly.sourceDir}/dist-linux.xml</descriptor>
+                                <descriptor>${project.assembly.sourceDir}/dist-linux/dist-linux.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
@@ -383,13 +392,15 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <finalName>${project.name}-${project.version}-windows</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
-                                <descriptor>${project.assembly.sourceDir}/dist-windows.xml</descriptor>
+                                <descriptor>${project.assembly.sourceDir}/dist-windows/dist-windows.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
         </plugins>
     </build>
