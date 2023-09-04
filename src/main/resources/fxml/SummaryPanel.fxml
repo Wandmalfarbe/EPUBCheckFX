@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<HBox fx:controller="de.pascalwagler.epubcheckfx.ui.controller.SummaryPanelController"
+      xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" spacing="10" fx:id="summaryPanel">
+    <children>
+        <Pane prefHeight="0" prefWidth="0" HBox.hgrow="ALWAYS"/>
+    </children>
+    <padding>
+        <Insets top="10.0"/>
+    </padding>
+</HBox>

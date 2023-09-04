@@ -1,7 +1,6 @@
 package de.pascalwagler.epubcheckfx.model;
 
 import com.adobe.epubcheck.messages.MessageId;
-import com.adobe.epubcheck.messages.Severity;
 import lombok.Builder;
 import lombok.Data;
 

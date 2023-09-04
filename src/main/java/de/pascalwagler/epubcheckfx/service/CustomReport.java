@@ -2,10 +2,15 @@ package de.pascalwagler.epubcheckfx.service;
 
 import com.adobe.epubcheck.api.EPUBLocation;
 import com.adobe.epubcheck.api.Report;
-import com.adobe.epubcheck.messages.*;
+import com.adobe.epubcheck.messages.LocalizedMessages;
+import com.adobe.epubcheck.messages.Message;
+import com.adobe.epubcheck.messages.MessageDictionary;
+import com.adobe.epubcheck.messages.MessageId;
+import com.adobe.epubcheck.messages.Severity;
 import com.adobe.epubcheck.util.FeatureEnum;
 import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import de.pascalwagler.epubcheckfx.model.InfoMessage;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -27,17 +32,20 @@ public class CustomReport implements Report {
     public void message(MessageId messageId, EPUBLocation epubLocation, Object... objects) {
         String localizedMessage = localizedMessages.getMessage(messageId).getMessage();
         String formattedMessage = String.format(localizedMessage, objects);
+        Severity severity = localizedMessages.getMessage(messageId).getSeverity();
 
-        errorList.add(CheckMessage.builder()
-                .messageId(messageId)
-                .message(formattedMessage)
-                .severity(localizedMessages.getMessage(messageId).getSeverity())
-                .suggestion(localizedMessages.getSuggestion(messageId))
-                .path(epubLocation.path)
-                .line(epubLocation.line != -1 ? epubLocation.line : null)
-                .column(epubLocation.column != -1 ? epubLocation.column : null)
-                .objects(objects)
-                .build());
+        Platform.runLater(() -> {
+            errorList.add(CheckMessage.builder()
+                    .messageId(messageId)
+                    .message(formattedMessage)
+                    .severity(de.pascalwagler.epubcheckfx.model.Severity.fromEpubcheckSeverity(severity))
+                    .suggestion(localizedMessages.getSuggestion(messageId))
+                    .path(epubLocation.path)
+                    .line(epubLocation.line != -1 ? epubLocation.line : null)
+                    .column(epubLocation.column != -1 ? epubLocation.column : null)
+                    .objects(objects)
+                    .build());
+        });
     }
 
     @Override

@@ -1,4 +1,4 @@
-package de.pascalwagler.epubcheckfx.ui;
+package de.pascalwagler.epubcheckfx.ui.controller;
 
 import atlantafx.base.theme.Styles;
 import com.adobe.epubcheck.util.FeatureEnum;

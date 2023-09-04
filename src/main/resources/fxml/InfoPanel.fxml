@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<GridPane hgap="10.0" minWidth="200" prefWidth="300" fx:controller="de.pascalwagler.epubcheckfx.ui.InfoPanelController"
+<GridPane hgap="10.0" minWidth="200" prefWidth="300" fx:controller="de.pascalwagler.epubcheckfx.ui.controller.InfoPanelController"
           xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
         <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" prefWidth="63.0"/>

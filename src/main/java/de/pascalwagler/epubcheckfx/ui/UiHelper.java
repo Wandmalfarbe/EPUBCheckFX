@@ -3,6 +3,7 @@ package de.pascalwagler.epubcheckfx.ui;
 import atlantafx.base.controls.Card;
 import atlantafx.base.controls.Tile;
 import com.adobe.epubcheck.util.FeatureEnum;
+import de.pascalwagler.epubcheckfx.model.Severity;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -12,7 +13,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.util.Pair;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,13 @@ public class UiHelper {
     private UiHelper() {
     }
 
-    static Node createInfoPane(Map<String, List<Pair<FeatureEnum, String>>> infoMap, ResourceBundle resourceBundle) {
+    public static FontIcon createSeverityIcon(Severity severity) {
+        FontIcon fontIcon = new FontIcon(severity.getIcon());
+        fontIcon.getStyleClass().add(severity.getColorStyleClass());
+        return fontIcon;
+    }
+
+    public static Node createInfoPane(Map<String, List<Pair<FeatureEnum, String>>> infoMap, ResourceBundle resourceBundle) {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(10, 0, 0, 0));
         vBox.setSpacing(10);
@@ -32,7 +41,7 @@ public class UiHelper {
         for (Map.Entry<String, List<Pair<FeatureEnum, String>>> entry : infoMap.entrySet()) {
             String resource = entry.getKey();
 
-            // Skip the general section because it is already displayed unter the metadata tab.
+            // Skip the general section because it is already displayed under the metadata tab.
             if ("general".equals(resource)) {
                 continue;
             }
@@ -77,7 +86,7 @@ public class UiHelper {
         return vBox;
     }
 
-    static Node createMetadataPane(Map<String, List<Pair<FeatureEnum, String>>> infoMap, ResourceBundle resourceBundle) {
+    public static Node createMetadataPane(Map<String, List<Pair<FeatureEnum, String>>> infoMap, ResourceBundle resourceBundle) {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(10, 0, 0, 0));
         vBox.setSpacing(10);

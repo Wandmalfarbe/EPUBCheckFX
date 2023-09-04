@@ -1,7 +1,6 @@
-package de.pascalwagler.epubcheckfx.ui;
+package de.pascalwagler.epubcheckfx.ui.controller;
 
 import com.adobe.epubcheck.api.EpubCheck;
-import com.adobe.epubcheck.messages.Severity;
 import com.adobe.epubcheck.util.Archive;
 import com.adobe.epubcheck.util.FeatureEnum;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -11,18 +10,28 @@ import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import de.pascalwagler.epubcheckfx.model.EpubProfile;
 import de.pascalwagler.epubcheckfx.model.ExportFormat;
 import de.pascalwagler.epubcheckfx.model.InfoMessage;
+import de.pascalwagler.epubcheckfx.model.Severity;
 import de.pascalwagler.epubcheckfx.service.CustomReport;
+import de.pascalwagler.epubcheckfx.ui.SeverityListCell;
+import de.pascalwagler.epubcheckfx.ui.SeverityTableCell;
+import de.pascalwagler.epubcheckfx.ui.TranslatableListCell;
+import de.pascalwagler.epubcheckfx.ui.UiHelper;
 import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -30,10 +39,19 @@ import javafx.util.Pair;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
@@ -88,6 +106,10 @@ public class MainContentController implements Initializable {
     @Setter
     private InfoPanelController infoPanelController;
 
+    @FXML
+    @Setter
+    private SummaryPanelController summaryPanelController;
+
     private FilteredList<CheckMessage> filteredErrorList;
 
     private static final File tempDirectory = new File(System.getProperty("java.io.tmpdir"), "EPUBCheckFX");
@@ -119,7 +141,7 @@ public class MainContentController implements Initializable {
             boolean matchesColumn = checkMessage.getColumn() != null && checkMessage.getColumn().toString().contains(searchLower);
 
             boolean matchesSearchString =
-                    "".equals(search) // Special case: The empty search matches always.
+                    search.isEmpty() // Special case: The empty search matches always.
                             || checkMessage.getMessageId().toString().toLowerCase().contains(searchLower)
                             || checkMessage.getMessage().toLowerCase().contains(searchLower)
                             || checkMessage.getSeverity().toString().contains(searchLower)
@@ -131,10 +153,10 @@ public class MainContentController implements Initializable {
     }
 
     private boolean isGreaterOrEqualSeverity(Severity a, Severity b) {
-        return a.toInt() >= b.toInt();
+        return a.ordinal() >= b.ordinal();
     }
 
-    public void clearFilter(ActionEvent actionEvent) {
+    public void clearFilter() {
         resultTableSearchFilter.setText("");
         resultTableSeverityFilter.getSelectionModel().select(de.pascalwagler.epubcheckfx.model.Severity.INFO);
     }
@@ -146,7 +168,7 @@ public class MainContentController implements Initializable {
             if (Objects.equals(oldValue, newValue)) {
                 return;
             }
-            filteredErrorList.setPredicate(tableFilterPredicate(newValue, resultTableSeverityFilter.getValue().getEbubcheckSeverity()));
+            filteredErrorList.setPredicate(tableFilterPredicate(newValue, resultTableSeverityFilter.getValue()));
         });
 
         resultTableSeverityFilter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -154,12 +176,14 @@ public class MainContentController implements Initializable {
             if (Objects.equals(oldValue, newValue)) {
                 return;
             }
-            filteredErrorList.setPredicate(tableFilterPredicate(resultTableSearchFilter.getText(), newValue.getEbubcheckSeverity()));
+            filteredErrorList.setPredicate(tableFilterPredicate(resultTableSearchFilter.getText(), newValue));
         });
 
         filteredErrorList = customReport.errorList.filtered(checkMessage -> true);
         Property<ObservableList<CheckMessage>> authorListProperty = new SimpleObjectProperty<>(filteredErrorList);
         validationResultTable.itemsProperty().bind(authorListProperty);
+
+        summaryPanelController.setFilteredErrorList(filteredErrorList);
 
         messageId.setCellValueFactory(new PropertyValueFactory<>("messageId"));
         severity.setCellValueFactory(new PropertyValueFactory<>("severity"));
@@ -192,6 +216,7 @@ public class MainContentController implements Initializable {
                 de.pascalwagler.epubcheckfx.model.Severity.FATAL
         );
         resultTableSeverityFilter.setButtonCell(resultTableSeverityFilter.getCellFactory().call(null));
+        resultTableSeverityFilter.setCellFactory(cell -> new SeverityListCell(resourceBundle));
         resultTableSeverityFilter.getSelectionModel().select(de.pascalwagler.epubcheckfx.model.Severity.INFO);
     }
 
@@ -227,6 +252,11 @@ public class MainContentController implements Initializable {
     @FXML
     public void chooseFile() {
         mainWindowController.chooseFile();
+    }
+
+    @FXML
+    public void chooseFolder() {
+        mainWindowController.chooseFolder();
     }
 
     @FXML
