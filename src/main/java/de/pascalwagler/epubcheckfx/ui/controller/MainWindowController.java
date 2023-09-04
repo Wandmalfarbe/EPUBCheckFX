@@ -1,4 +1,4 @@
-package de.pascalwagler.epubcheckfx.ui;
+package de.pascalwagler.epubcheckfx.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,6 +7,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -73,7 +74,7 @@ public class MainWindowController implements Initializable {
     @FXML
     public void chooseFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open");
+        fileChooser.setTitle("Open File");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
         File file = fileChooser.showOpenDialog(this.dragAndDropAnchorPane.getScene().getWindow());
 
@@ -82,6 +83,19 @@ public class MainWindowController implements Initializable {
             dragAndDropAnchorPane.setVisible(false);
             loadingPane.setVisible(true);
             mainContentController.runEpubCheck(file);
+        }
+    }
+
+    public void chooseFolder() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Open Folder");
+        File folder = directoryChooser.showDialog(this.dragAndDropAnchorPane.getScene().getWindow());
+
+        if (folder != null) {
+            mainContentAnchorPane.setVisible(false);
+            dragAndDropAnchorPane.setVisible(false);
+            loadingPane.setVisible(true);
+            mainContentController.runEpubCheck(folder);
         }
     }
 

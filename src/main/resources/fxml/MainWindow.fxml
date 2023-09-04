@@ -4,11 +4,15 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <StackPane prefHeight="700" prefWidth="900" xmlns="http://javafx.com/javafx/20.0.1"
-           xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.pascalwagler.epubcheckfx.ui.MainWindowController"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.pascalwagler.epubcheckfx.ui.controller.MainWindowController"
            onDragDropped="#onDragDropped" onDragEntered="#onDragEntered" onDragExited="#onDragExited"
            onDragOver="#onDragOver">
     <children>

@@ -5,8 +5,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-
-<GridPane fx:id="keyValueGrid" hgap="10.0" minWidth="200" prefWidth="300" fx:controller="de.pascalwagler.epubcheckfx.ui.KeyValueGridController" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="keyValueGrid" hgap="10.0" minWidth="200" prefWidth="300" fx:controller="de.pascalwagler.epubcheckfx.ui.controller.KeyValueGridController" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
     <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" prefWidth="63.0" />
     <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />

@@ -1,4 +1,4 @@
-package de.pascalwagler.epubcheckfx.ui;
+package de.pascalwagler.epubcheckfx.ui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

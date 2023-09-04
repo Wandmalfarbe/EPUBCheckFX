@@ -1,13 +1,53 @@
+/**
+ * Workaround for bold fonts on macOS (see https://stackoverflow.com/questions/60361056/whats-wrong-with-java-fxs-bold-handling)
+ */
 * {
 	-fx-font-family: "Arial";
 }
 
+/**
+ * Workaround for large icons in the fxml files. The size there (iconSize="64") is not applied when using AtlantaFX.
+ */
 .icon-large {
     -fx-icon-size: 32px;
 }
 
 /**
- * AltlantaFX can align table content but not the corresponding column headings.
+ * Workaround for colored icons in the severity ComboBox. The color via the default
+ * AtlantaFX classes "STYLES.DANGER" or "danger" was not applied in ComboBoxes.
+ */
+.color-suppressed {
+  -fx-fill: -color-fg-subtle;
+  -fx-icon-color: -color-fg-subtle;
+}
+
+.color-usage {
+  -fx-fill: -color-fg-muted;
+  -fx-icon-color: -color-fg-muted;
+}
+
+.color-info {
+  -fx-fill: -color-accent-fg;
+  -fx-icon-color: -color-accent-fg;
+}
+
+.color-warning {
+  -fx-fill: -color-warning-fg;
+  -fx-icon-color: -color-warning-fg;
+}
+
+.color-error {
+  -fx-fill: -color-danger-fg;
+  -fx-icon-color: -color-danger-fg;
+}
+
+.color-fatal {
+  -fx-fill: -color-danger-fg;
+  -fx-icon-color: -color-danger-fg;
+}
+
+/**
+ * AtlantaFX can align table content but not the corresponding column headings.
  */
 .column-header.align-right > .label {
     -fx-alignment: BASELINE_RIGHT;
