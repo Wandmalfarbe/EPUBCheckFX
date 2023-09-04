@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.pascalwagler</groupId>
     <artifactId>epubcheckfx</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 
     <name>EPUBCheckFX</name>
     <description>A graphical interface for EPUBCheck.</description>

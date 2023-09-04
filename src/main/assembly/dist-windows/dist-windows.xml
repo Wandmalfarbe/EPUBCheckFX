@@ -17,6 +17,9 @@
             <source>${project.basedir}/README.md</source>
         </file>
         <file>
+            <source>${project.basedir}/CHANGELOG.md</source>
+        </file>
+        <file>
             <source>${project.basedir}/LICENSE</source>
         </file>
     </files>
