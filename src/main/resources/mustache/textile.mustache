@@ -1,0 +1,10 @@
+h1. {{translatedStrings.headingReport}}
+
+h2. {{translatedStrings.headingValidationResults}}
+
+|^.
+|_. {{translatedStrings.messageId}}|_. {{translatedStrings.severity}}|_. {{translatedStrings.message}}|_. {{translatedStrings.path}}|_. {{translatedStrings.line}}|_. {{translatedStrings.column}}|
+|-.
+{{#validationResult}}
+|{{messageId}}|{{severity}}|{{message}}|{{path}}|{{line}}|{{column}}|
+{{/validationResult}}

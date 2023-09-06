@@ -3,15 +3,14 @@ package de.pascalwagler.epubcheckfx.ui.controller;
 import com.adobe.epubcheck.api.EpubCheck;
 import com.adobe.epubcheck.util.Archive;
 import com.adobe.epubcheck.util.FeatureEnum;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
 import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import de.pascalwagler.epubcheckfx.model.EpubProfile;
 import de.pascalwagler.epubcheckfx.model.ExportFormat;
 import de.pascalwagler.epubcheckfx.model.InfoMessage;
 import de.pascalwagler.epubcheckfx.model.Severity;
 import de.pascalwagler.epubcheckfx.service.CustomReport;
+import de.pascalwagler.epubcheckfx.service.ExportService;
+import de.pascalwagler.epubcheckfx.ui.ExportFormatListCell;
 import de.pascalwagler.epubcheckfx.ui.SeverityListCell;
 import de.pascalwagler.epubcheckfx.ui.SeverityTableCell;
 import de.pascalwagler.epubcheckfx.ui.TranslatableListCell;
@@ -35,18 +34,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Pair;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -221,14 +219,18 @@ public class MainContentController implements Initializable {
     }
 
     private void initExportFormat() {
-        exportFormat.setCellFactory(listView -> new TranslatableListCell<>(resourceBundle));
+        exportFormat.setCellFactory(listView -> new ExportFormatListCell(resourceBundle));
         exportFormat.getItems().addAll(
                 ExportFormat.HTML,
                 ExportFormat.MARKDOWN,
-                ExportFormat.MARKDOWN_LIST,
+                ExportFormat.ASCIIDOC,
+                ExportFormat.RESTRUCTUREDTEXT,
+                ExportFormat.TEXTILE,
                 ExportFormat.PLAINTEXT,
-                ExportFormat.EPUB_CHECKER_TXT);
-        exportFormat.setButtonCell(exportFormat.getCellFactory().call(null));
+                ExportFormat.EPUB_CHECKER_TXT,
+                ExportFormat.CSV,
+                ExportFormat.TSV);
+        exportFormat.setButtonCell(new TranslatableListCell<>(resourceBundle));
         exportFormat.getSelectionModel().selectFirst();
     }
 
@@ -274,7 +276,7 @@ public class MainContentController implements Initializable {
                 } else {
                     epubToValidate = epubFile;
                 }
-                EpubCheck epubcheck = new EpubCheck(epubToValidate, customReport, epubProfile.getValue().getEpubProfile());
+                EpubCheck epubcheck = new EpubCheck(epubToValidate, customReport, epubProfile.getValue().getEpubcheckEpubProfile());
                 epubcheck.check();
 
                 Map<String, List<Pair<FeatureEnum, String>>> infoMap = toMap();
@@ -330,24 +332,29 @@ public class MainContentController implements Initializable {
     public void export() throws IOException {
 
         ExportFormat selectedExportFormat = exportFormat.getValue();
-
-        MustacheFactory mf = new DefaultMustacheFactory();
-        InputStreamReader inputStreamReader = new InputStreamReader(getClass().getResource("/mustache/" + selectedExportFormat.getName() + ".mustache").openStream());
-        Mustache mustache = mf.compile(inputStreamReader, "Blah");
-
-        Map<String, Object> context = new HashMap<>();
-        context.put("validationResult", customReport.errorList);
-        context.put("infoResult", customReport.infoList);
-
+        String[] extensions = Arrays.stream(selectedExportFormat.getExtensions())
+                .map(s -> "*." + s)
+                .toArray(String[]::new);
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save");
-        fileChooser.setInitialFileName("EPUBCheckFX-Report");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*." + selectedExportFormat.getExtension()));
+        fileChooser.setTitle(resourceBundle.getString("report.file_chooser.title"));
+        fileChooser.setInitialFileName(resourceBundle.getString("report.filename"));
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter(
+                resourceBundle.getString(selectedExportFormat.getI18nKey()),
+                extensions));
         File file = fileChooser.showSaveDialog(exportFormat.getScene().getWindow());
 
-        if (file != null) {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            mustache.execute(writer, context).flush();
+        if (file == null) {
+            return;
+        }
+
+        switch (selectedExportFormat) {
+            case CSV:
+            case TSV:
+                ExportService.exportCsvTsv(customReport.errorList, selectedExportFormat, file, resourceBundle);
+                break;
+            default:
+                ExportService.exportWithMustache(customReport.errorList, selectedExportFormat, file, resourceBundle);
+                break;
         }
     }
 }

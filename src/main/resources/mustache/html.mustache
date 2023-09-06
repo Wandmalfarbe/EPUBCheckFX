@@ -1,16 +1,29 @@
-<h1>EPUBCheckFX Report</h1>
+<!DOCTYPE html>
+<html lang="{{metadata.language}}">
+<head>
+    <meta charset="utf-8">
+    <title>{{translatedStrings.headingReport}}</title>
+    <style>
+        body {
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        }
+    </style>
+</head>
+<body>
 
-<h2>Validation Result</h2>
+<h1>{{translatedStrings.headingReport}}</h1>
+
+<h2>{{translatedStrings.headingValidationResults}}</h2>
 
 <table>
     <thead>
         <tr>
-            <th>Message-Id</th>
-            <th>Severity</th>
-            <th>Message</th>
-            <th>Path</th>
-            <th>Line</th>
-            <th>Column</th>
+            <th>{{translatedStrings.messageId}}</th>
+            <th>{{translatedStrings.severity}}</th>
+            <th>{{translatedStrings.message}}</th>
+            <th>{{translatedStrings.path}}</th>
+            <th>{{translatedStrings.line}}</th>
+            <th>{{translatedStrings.column}}</th>
         </tr>
     </thead>
     <tbody>
@@ -27,23 +40,5 @@
     </tbody>
 </table>
 
-<h2>Info Result</h2>
-
-<table>
-    <thead>
-        <tr>
-            <th>Message-Id</th>
-            <th>Severity</th>
-            <th>Message</th>
-        </tr>
-    </thead>
-    <tbody>
-    {{#infoResult}}
-        <tr>
-            <td>{{feature}}</td>
-            <td>{{resource}}</td>
-            <td>{{value}}</td>
-        </tr>
-    {{/infoResult}}
-    </tbody>
-</table>
+</body>
+</html>

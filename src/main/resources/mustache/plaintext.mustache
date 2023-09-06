@@ -1,7 +1,4 @@
 {{#validationResult}}
-{{{messageId}}} {{{severity}}}: {{{message}}} ({{{path}}}, Line {{{line}}}, Column {{{column}}})
+{{{messageId}}} {{{severity}}}: {{{message}}} ({{{path}}}{{#line}}, {{{translatedStrings.line}}} {{{line}}}{{/line}}{{#column}}, {{{translatedStrings.column}}} {{{column}}}{{/column}})
 {{/validationResult}}
 
-{{#infoResult}}
-{{{feature}}} "{{{resource}}}": {{{value}}}
-{{/infoResult}}

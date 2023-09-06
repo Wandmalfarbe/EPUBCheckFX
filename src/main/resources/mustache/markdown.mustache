@@ -1,20 +1,9 @@
-EPUBCheckFX Report
-==================
+# {{translatedStrings.headingReport}}
 
-Validation Result
------------------
+## {{translatedStrings.headingValidationResults}}
 
-| Message-Id | Severity | Message | Path | Line | Column |
+| {{translatedStrings.messageId}} | {{translatedStrings.severity}} | {{translatedStrings.message}} | {{translatedStrings.path}} | {{translatedStrings.line}} | {{translatedStrings.column}} |
 | --- | --- | --- | --- | --- | --- |
 {{#validationResult}}
 | {{messageId}} | {{severity}} | {{message}} | {{path}} | {{line}} | {{column}} |
 {{/validationResult}}
-
-Info Result
------------
-
-| Feature | Resource | Value |
-| --- | --- | --- |
-{{#infoResult}}
-| {{feature}} | {{resource}} | {{value}} |
-{{/infoResult}}

@@ -1,0 +1,18 @@
+= {{translatedStrings.headingReport}}
+
+== {{translatedStrings.headingValidationResults}}
+
+[cols="1,1,3,3,1,1"]
+|===
+|{{translatedStrings.messageId}} |{{translatedStrings.severity}} |{{translatedStrings.message}} |{{translatedStrings.path}} |{{translatedStrings.line}} |{{translatedStrings.column}}
+
+{{#validationResult}}
+|{{messageId}}
+|{{severity}}
+|{{message}}
+|{{path}}
+|{{line}}
+|{{column}}
+
+{{/validationResult}}
+|===

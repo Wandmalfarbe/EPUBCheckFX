@@ -2,7 +2,7 @@
 ---------------------------------------------------
 
 {{#validationResult}}
-{{{severity}}} ({{{messageId}}}) in "{{{path}}}" (Zeile {{{line}}}, Zeichen {{{column}}}):
+{{{severity}}} ({{{messageId}}}) in "{{{path}}}"{{#line}} ({{{translatedStrings.line}}} {{{line}}}{{/line}}{{#column}}, {{{translatedStrings.column}}} {{{column}}}){{/column}}:
    {{{message}}}
 
 {{/validationResult}}
