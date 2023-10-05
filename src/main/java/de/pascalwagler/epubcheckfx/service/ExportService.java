@@ -60,7 +60,7 @@ public class ExportService {
         String mustacheTemplate = "/mustache/" + exportFormat.getName() + ".mustache";
         URL resource = ExportService.class.getResource(mustacheTemplate);
         if (resource == null) {
-            log.error("Could not open mustache template {}", mustacheTemplate);
+            log.error("Could not open mustache template '{}'.", mustacheTemplate);
             return;
         }
         InputStreamReader inputStreamReader = new InputStreamReader(resource.openStream());

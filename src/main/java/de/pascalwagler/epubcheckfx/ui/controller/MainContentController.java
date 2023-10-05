@@ -3,6 +3,7 @@ package de.pascalwagler.epubcheckfx.ui.controller;
 import com.adobe.epubcheck.api.EpubCheck;
 import com.adobe.epubcheck.util.Archive;
 import com.adobe.epubcheck.util.FeatureEnum;
+import de.pascalwagler.epubcheckfx.App;
 import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import de.pascalwagler.epubcheckfx.model.EpubProfile;
 import de.pascalwagler.epubcheckfx.model.ExportFormat;
@@ -10,14 +11,18 @@ import de.pascalwagler.epubcheckfx.model.InfoMessage;
 import de.pascalwagler.epubcheckfx.model.Severity;
 import de.pascalwagler.epubcheckfx.service.CustomReport;
 import de.pascalwagler.epubcheckfx.service.ExportService;
-import de.pascalwagler.epubcheckfx.ui.ExportFormatListCell;
-import de.pascalwagler.epubcheckfx.ui.SeverityListCell;
-import de.pascalwagler.epubcheckfx.ui.SeverityTableCell;
-import de.pascalwagler.epubcheckfx.ui.TranslatableListCell;
-import de.pascalwagler.epubcheckfx.ui.UiHelper;
+import de.pascalwagler.epubcheckfx.ui.BindingUtil;
+import de.pascalwagler.epubcheckfx.ui.PreferencesUtil;
+import de.pascalwagler.epubcheckfx.ui.UiBuilder;
+import de.pascalwagler.epubcheckfx.ui.cell.ExportFormatListCell;
+import de.pascalwagler.epubcheckfx.ui.cell.SeverityListCell;
+import de.pascalwagler.epubcheckfx.ui.cell.SeverityTableCell;
+import de.pascalwagler.epubcheckfx.ui.cell.TranslatableListCell;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -31,7 +36,9 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -81,6 +88,10 @@ public class MainContentController implements Initializable {
     private TextField resultTableSearchFilter;
     @FXML
     private ComboBox<de.pascalwagler.epubcheckfx.model.Severity> resultTableSeverityFilter;
+    @FXML
+    private ToggleButton viewTable;
+    @FXML
+    private ToggleButton viewList;
 
     @FXML
     private ComboBox<ExportFormat> exportFormat;
@@ -92,6 +103,8 @@ public class MainContentController implements Initializable {
     private File epubFile;
 
     @FXML
+    private ScrollPane scrollValidation;
+    @FXML
     private ScrollPane scrollMetadata;
     @FXML
     private ScrollPane scrollInfo;
@@ -99,6 +112,10 @@ public class MainContentController implements Initializable {
     @FXML
     @Setter
     private MainWindowController mainWindowController;
+
+    @FXML
+    @Setter
+    private MenuPanelController menuPanelController;
 
     @FXML
     @Setter
@@ -124,8 +141,13 @@ public class MainContentController implements Initializable {
             log.error("Unexpected Exception when creating the temporary directory.");
             throw new RuntimeException(e);
         }
+
+        filteredErrorList = customReport.errorList.filtered(checkMessage -> true);
+
         initValidationResultTable();
+        initValidationResultList();
         initSeverityFilter();
+        initViewToggle();
         initExportFormat();
         initEpubProfile();
         epubcheckVersion.setText("EPUBCheck Version " + EpubCheck.version() + " - (Built " + EpubCheck.buildDate() + ")");
@@ -154,6 +176,26 @@ public class MainContentController implements Initializable {
         return a.ordinal() >= b.ordinal();
     }
 
+    public void viewTable() {
+        changeViewMode(true);
+    }
+
+    public void viewList() {
+        changeViewMode(false);
+    }
+
+    private void changeViewMode(boolean isTable) {
+
+        App.userPreferences.put(App.PREFERENCES_VIEW, isTable ? "table" : "list");
+
+        viewTable.setSelected(isTable);
+        viewList.setSelected(!isTable);
+        validationResultTable.setVisible(isTable);
+        validationResultTable.setManaged(isTable);
+        scrollValidation.setVisible(!isTable);
+        scrollValidation.setManaged(!isTable);
+    }
+
     public void clearFilter() {
         resultTableSearchFilter.setText("");
         resultTableSeverityFilter.getSelectionModel().select(de.pascalwagler.epubcheckfx.model.Severity.INFO);
@@ -177,9 +219,8 @@ public class MainContentController implements Initializable {
             filteredErrorList.setPredicate(tableFilterPredicate(resultTableSearchFilter.getText(), newValue));
         });
 
-        filteredErrorList = customReport.errorList.filtered(checkMessage -> true);
-        Property<ObservableList<CheckMessage>> authorListProperty = new SimpleObjectProperty<>(filteredErrorList);
-        validationResultTable.itemsProperty().bind(authorListProperty);
+        Property<ObservableList<CheckMessage>> filteredErrorListProperty = new SimpleObjectProperty<>(filteredErrorList);
+        validationResultTable.itemsProperty().bind(filteredErrorListProperty);
 
         summaryPanelController.setFilteredErrorList(filteredErrorList);
 
@@ -191,6 +232,18 @@ public class MainContentController implements Initializable {
         path.setCellValueFactory(new PropertyValueFactory<>("path"));
         line.setCellValueFactory(new PropertyValueFactory<>("line"));
         column.setCellValueFactory(new PropertyValueFactory<>("column"));
+
+        validationResultTable.setVisible(false);
+        validationResultTable.setManaged(false);
+    }
+
+    private void initValidationResultList() {
+
+        VBox validationResultListVBox = new VBox();
+        ObservableList<Node> nodes = FXCollections.observableArrayList();
+        BindingUtil.mapContent(nodes, filteredErrorList, UiBuilder::createListCell);
+        Bindings.bindContent(validationResultListVBox.getChildren(), nodes);
+        scrollValidation.setContent(validationResultListVBox);
     }
 
     private TableCell<CheckMessage, String> createWrappingTableCell(TableColumn<CheckMessage, String> tableColumn) {
@@ -215,7 +268,12 @@ public class MainContentController implements Initializable {
         );
         resultTableSeverityFilter.setButtonCell(resultTableSeverityFilter.getCellFactory().call(null));
         resultTableSeverityFilter.setCellFactory(cell -> new SeverityListCell(resourceBundle));
-        resultTableSeverityFilter.getSelectionModel().select(de.pascalwagler.epubcheckfx.model.Severity.INFO);
+        PreferencesUtil.syncWithPreferences(resultTableSeverityFilter, Severity.INFO, App.PREFERENCES_SEVERITY);
+    }
+
+    private void initViewToggle() {
+        String selectedView = App.userPreferences.get(App.PREFERENCES_VIEW, "table");
+        changeViewMode(selectedView.equals("table"));
     }
 
     private void initExportFormat() {
@@ -231,7 +289,8 @@ public class MainContentController implements Initializable {
                 ExportFormat.CSV,
                 ExportFormat.TSV);
         exportFormat.setButtonCell(new TranslatableListCell<>(resourceBundle));
-        exportFormat.getSelectionModel().selectFirst();
+        PreferencesUtil.syncWithPreferences(exportFormat, ExportFormat.HTML, App.PREFERENCES_EXPORT_FORMAT);
+
     }
 
     private void initEpubProfile() {
@@ -243,7 +302,7 @@ public class MainContentController implements Initializable {
                 EpubProfile.IDX,
                 EpubProfile.PREVIEW);
         epubProfile.setButtonCell(epubProfile.getCellFactory().call(null));
-        epubProfile.getSelectionModel().selectFirst();
+        PreferencesUtil.syncWithPreferences(epubProfile, EpubProfile.DEFAULT, App.PREFERENCES_EPUB_PROFILE);
     }
 
     public void runEpubCheck(File file) {
@@ -280,8 +339,8 @@ public class MainContentController implements Initializable {
                 epubcheck.check();
 
                 Map<String, List<Pair<FeatureEnum, String>>> infoMap = toMap();
-                Node metadataPane = UiHelper.createMetadataPane(infoMap, resourceBundle);
-                Node infoPane = UiHelper.createInfoPane(infoMap, resourceBundle);
+                Node metadataPane = UiBuilder.createMetadataPane(infoMap, resourceBundle);
+                Node infoPane = UiBuilder.createInfoPane(infoMap, resourceBundle);
 
                 Platform.runLater(() -> {
                     scrollMetadata.setContent(metadataPane);

@@ -3,18 +3,23 @@ package de.pascalwagler.epubcheckfx.ui;
 import atlantafx.base.controls.Card;
 import atlantafx.base.controls.Tile;
 import com.adobe.epubcheck.util.FeatureEnum;
+import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import de.pascalwagler.epubcheckfx.model.Severity;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.util.Pair;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.List;
@@ -22,15 +27,57 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class UiHelper {
-
-    private UiHelper() {
-    }
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class UiBuilder {
 
     public static FontIcon createSeverityIcon(Severity severity) {
         FontIcon fontIcon = new FontIcon(severity.getIcon());
         fontIcon.getStyleClass().add(severity.getColorStyleClass());
         return fontIcon;
+    }
+
+    public static Node createListCell(CheckMessage checkMessage) {
+
+        FontIcon fontIcon = new FontIcon();
+        fontIcon.getStyleClass().clear();
+        fontIcon.getStyleClass().addAll(checkMessage.getSeverity().getColorStyleClass());
+        fontIcon.setIconCode(checkMessage.getSeverity().getIcon());
+        fontIcon.setIconSize(20);
+        Text messageId = new Text();
+        messageId.setText(checkMessage.getMessageId().toString());
+
+        messageId.getStyleClass().add("title-4");
+
+        Label message = new Label();
+        message.setWrapText(true);
+        message.setText(checkMessage.getMessage());
+
+        Label path = new Label();
+        path.setWrapText(true);
+        String lineText = "";
+        if (checkMessage.getLine() != null) {
+            lineText = " (Line " + checkMessage.getLine() + ", Column " + checkMessage.getColumn() + ")";
+        }
+        path.setText(checkMessage.getPath() + lineText);
+        path.getStyleClass().add("text-muted");
+
+        VBox vBox;
+        if (!"".equals(checkMessage.getSuggestion())) {
+            Label suggestion = new Label(checkMessage.getSuggestion());
+            suggestion.setWrapText(true);
+            suggestion.setGraphic(new FontIcon("mdoal-lightbulb"));
+            vBox = new VBox(messageId, message, suggestion, path);
+        } else {
+            vBox = new VBox(messageId, message, path);
+        }
+        vBox.setSpacing(10);
+        HBox hBox = new HBox(fontIcon, vBox);
+        hBox.setSpacing(10);
+        VBox.setMargin(hBox, new Insets(10, 10, 10, 10));
+
+        Separator separator = new Separator();
+        separator.getStyleClass().add("small");
+        return new VBox(hBox, separator);
     }
 
     public static Node createInfoPane(Map<String, List<Pair<FeatureEnum, String>>> infoMap, ResourceBundle resourceBundle) {

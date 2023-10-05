@@ -1,10 +1,9 @@
-package de.pascalwagler.epubcheckfx.ui;
+package de.pascalwagler.epubcheckfx.ui.cell;
 
 import atlantafx.base.theme.Styles;
 import de.pascalwagler.epubcheckfx.model.ExportFormat;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;

@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file. On the [releases page](https://github.com/Wandmalfarbe/EPUBCheckFX/releases) you can see all released versions of EPUBCheckFX and download the [latest version](https://github.com/Wandmalfarbe/EPUBCheckFX/releases/latest).
 
-## In Development
+## [1.2.0] - 2023-10-05
 
 - Add the following export formats:
   - AsciiDoc
@@ -15,6 +15,11 @@ All notable changes to this project are documented in this file. On the [release
 - Don't show empty line numbers when exporting to *plaintext* and *pagina EPUB-Checker Text*.
 - Don't HTML encode anything when exporting to *plaintext* and *pagina EPUB-Checker Text*.
 - Reports are fully translated.
+- Add a menubar where it is possible to change the theme, open links to the project website or open the about screen.
+- Add an About screen that displays copyright information, license information and third-party licenses.
+- Add persistence to the ComboBoxes for the EPUB profile the severity filter and the export format.
+  They will remember the last selected value even when the application is closed.
+- Add a view
 
 ## [1.1.0] - 2023-09-04
 
@@ -27,5 +32,6 @@ All notable changes to this project are documented in this file. On the [release
 
 Initial release with different executables for Windows, macOS and Linux.
 
+[1.2.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.1.0...1.2.0
 [1.1.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.0.0...1.1.0
 [1.0.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/releases/tag/v1.0.0

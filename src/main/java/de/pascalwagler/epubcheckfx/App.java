@@ -1,8 +1,7 @@
-package de.pascalwagler.epubcheckfx.ui;
+package de.pascalwagler.epubcheckfx;
 
-import atlantafx.base.theme.PrimerDark;
-import atlantafx.base.theme.PrimerLight;
 import com.jthemedetecor.OsThemeDetector;
+import de.pascalwagler.epubcheckfx.model.Theme;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -12,9 +11,12 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
+import java.awt.Taskbar;
+import java.awt.Toolkit;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 @Slf4j
 public class App extends Application {
@@ -23,7 +25,19 @@ public class App extends Application {
         Application.launch(args);
     }
 
-    private final OsThemeDetector detector = OsThemeDetector.getDetector();
+    private static final OsThemeDetector detector = OsThemeDetector.getDetector();
+    private static Theme currentTheme;
+
+    public static final Preferences userPreferences = Preferences.userNodeForPackage(App.class);
+
+    private static final String VERSION = "1.1.0";
+
+    public static final String PREFERENCES_VERSION = "version";
+    public static final String PREFERENCES_SEVERITY = "severity";
+    public static final String PREFERENCES_EXPORT_FORMAT = "export_format";
+    public static final String PREFERENCES_EPUB_PROFILE = "epub_profile";
+    public static final String PREFERENCES_THEME = "theme";
+    public static final String PREFERENCES_VIEW = "view";
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -31,17 +45,31 @@ public class App extends Application {
         log.info("Java Version: " + System.getProperty("java.version"));
         log.info("JavaFX Version: " + System.getProperty("javafx.version"));
 
+        clearPreferencesWhenChangedVersion();
+
         ResourceBundle bundle = ResourceBundle.getBundle("i18n.LangBundle", Locale.getDefault());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainWindow.fxml"), bundle);
         Parent root = loader.load();
         Scene scene = new Scene(root);
 
-        applyTheme(scene);
+        initStyles(scene);
         applyIcon(stage);
 
         stage.setTitle(bundle.getString("app.name"));
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * Just delete all the preferences when a new (or old) version is run for the first time.
+     * There are no preferences migrations.
+     */
+    private static void clearPreferencesWhenChangedVersion() throws BackingStoreException {
+        String version = userPreferences.get(PREFERENCES_VERSION, VERSION);
+        if (!version.equals(VERSION)) {
+            userPreferences.clear();
+        }
+        userPreferences.put(PREFERENCES_VERSION, VERSION);
     }
 
     private void applyIcon(Stage stage) {
@@ -68,25 +96,25 @@ public class App extends Application {
         }
     }
 
-    private void applyTheme(Scene scene) {
+    private void initStyles(Scene scene) {
+
+        String selectedThemeFromPreferences = App.userPreferences.get(PREFERENCES_THEME, Theme.PRIMER.name());
+        setTheme(Theme.valueOf(selectedThemeFromPreferences));
+        detector.registerListener(isDark -> Platform.runLater(() -> setTheme(currentTheme)));
+
+        scene.getStylesheets().add("/css/style.css");
+    }
+
+    public static void setTheme(Theme theme) {
+        App.currentTheme = theme;
+        App.userPreferences.put(PREFERENCES_THEME, theme.name());
 
         // The theme detection code currently logs a NullPointerException
         // (see https://github.com/Dansoftowner/jSystemThemeDetector/issues/18).
-
         if (detector.isDark()) {
-            Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+            Application.setUserAgentStylesheet(App.currentTheme.getAtlantaFxDarkTheme().getUserAgentStylesheet());
         } else {
-            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+            Application.setUserAgentStylesheet(App.currentTheme.getAtlantaFxLightTheme().getUserAgentStylesheet());
         }
-
-        detector.registerListener(isDark -> Platform.runLater(() -> {
-            if (Boolean.TRUE.equals(isDark)) {
-                Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
-            } else {
-                Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            }
-        }));
-
-        scene.getStylesheets().add("/css/style.css");
     }
 }

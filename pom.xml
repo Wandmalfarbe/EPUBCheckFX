@@ -22,7 +22,7 @@
         <openjfx.version>20</openjfx.version>
         <ikonli.version>12.3.1</ikonli.version>
 
-        <main.class>de.pascalwagler.epubcheckfx.ui.App</main.class>
+        <main.class>de.pascalwagler.epubcheckfx.App</main.class>
 
         <project.assembly.sourceDir>${project.basedir}/src/main/assembly</project.assembly.sourceDir>
         <project.notRunnableJar.name>${project.name}-${project.version}-not-runnable.jar</project.notRunnableJar.name>
@@ -244,6 +244,26 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>1.10.0</version>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>4.0.15-alpha</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
