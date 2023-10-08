@@ -12,14 +12,16 @@ All notable changes to this project are documented in this file. On the [release
   - TSV (Tab-separated values)
 - Remove the export format *Markdown (Table)*.
 - Remove the additional extracted features from all export formats.
+- The ComboBox for the export formats now displays the file extensions of all the formats.
 - Don't show empty line numbers when exporting to *plaintext* and *pagina EPUB-Checker Text*.
 - Don't HTML encode anything when exporting to *plaintext* and *pagina EPUB-Checker Text*.
 - Reports are fully translated.
-- Add a menubar where it is possible to change the theme, open links to the project website or open the about screen.
+- Add a menubar where it is possible to change the theme, open links to the project website, or open the about screen.
 - Add an About screen that displays copyright information, license information and third-party licenses.
-- Add persistence to the ComboBoxes for the EPUB profile the severity filter and the export format.
+- Add persistence to the `ComboBoxes` for the EPUB profile, the severity filter and the export format.
   They will remember the last selected value even when the application is closed.
-- Add a view
+- Add the view modes *table* and *list* for the validation results. The view mode will be remembered even
+  when the application is closed.
 
 ## [1.1.0] - 2023-09-04
 
