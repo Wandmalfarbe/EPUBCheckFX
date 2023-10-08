@@ -10,13 +10,14 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-<BorderPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/20.0.0" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="de.pascalwagler.epubcheckfx.ui.controller.MainContentController">
     <center>
         <VBox alignment="CENTER" prefHeight="400.0" BorderPane.alignment="CENTER">
@@ -29,7 +30,7 @@
                                     <padding>
                                         <Insets top="10.0"/>
                                     </padding>
-                                    <HBox alignment="BASELINE_CENTER" prefHeight="0.0" prefWidth="200.0" spacing="10.0">
+                                    <HBox alignment="BASELINE_CENTER" prefHeight="0.0" prefWidth="200.0">
                                         <padding>
                                             <Insets bottom="10.0"/>
                                         </padding>
@@ -42,13 +43,39 @@
                                                     <FontIcon iconLiteral="mdmz-search"/>
                                                 </left>
                                             </CustomTextField>
-                                            <Label text="%result_table.column_severity"/>
-                                            <ComboBox fx:id="resultTableSeverityFilter"/>
+                                            <Label text="%result_table.column_severity">
+                                                <HBox.margin>
+                                                    <Insets left="10.0"/>
+                                                </HBox.margin>
+                                            </Label>
+                                            <ComboBox fx:id="resultTableSeverityFilter">
+                                                <HBox.margin>
+                                                    <Insets left="10.0"/>
+                                                </HBox.margin>
+                                            </ComboBox>
+
+                                            <ToggleButton fx:id="viewTable" styleClass="left-pill" onAction="#viewTable">
+                                                <graphic>
+                                                    <FontIcon iconLiteral="mdomz-view_column" iconSize="16"/>
+                                                </graphic>
+                                                <HBox.margin>
+                                                    <Insets left="10.0"/>
+                                                </HBox.margin>
+                                            </ToggleButton>
+                                            <ToggleButton fx:id="viewList" styleClass="right-pill" onAction="#viewList">
+                                                <graphic>
+                                                    <FontIcon iconLiteral="mdal-list" iconSize="16"/>
+                                                </graphic>
+                                            </ToggleButton>
+
                                             <Button mnemonicParsing="false" onAction="#clearFilter"
                                                     text="%result_table.filter.clear">
                                                 <graphic>
                                                     <FontIcon iconLiteral="mdoal-clear" iconSize="16"/>
                                                 </graphic>
+                                                <HBox.margin>
+                                                    <Insets left="10.0"/>
+                                                </HBox.margin>
                                             </Button>
                                         </children>
                                     </HBox>
@@ -73,6 +100,7 @@
                                         </columns>
 
                                     </TableView>
+                                    <ScrollPane fx:id="scrollValidation" styleClass="bordered" fitToWidth="true" VBox.vgrow="ALWAYS"/>
                                     <fx:include fx:id="summaryPanel" source="SummaryPanel.fxml" HBox.hgrow="ALWAYS"/>
                                 </VBox>
                             </content>
@@ -99,7 +127,7 @@
         <HBox alignment="BASELINE_CENTER" prefHeight="0.0" prefWidth="200.0" spacing="10.0"
               BorderPane.alignment="CENTER_LEFT">
             <children>
-                <Label fx:id="epubcheckVersion" text="Input"/>
+                <Label fx:id="epubcheckVersion" text="%epub_check_version"/>
                 <Pane prefHeight="0" prefWidth="0" HBox.hgrow="ALWAYS"/>
                 <Label text="%export_format"/>
                 <ComboBox fx:id="exportFormat"/>
@@ -117,6 +145,7 @@
     <top>
         <VBox BorderPane.alignment="CENTER">
             <children>
+                <fx:include fx:id="menuPanel" source="MenuPanel.fxml"/>
                 <ToolBar prefHeight="40.0" prefWidth="200.0">
                     <items>
                         <Label text="%epub_profile"/>

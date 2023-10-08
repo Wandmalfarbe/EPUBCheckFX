@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.pascalwagler</groupId>
     <artifactId>epubcheckfx</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <name>EPUBCheckFX</name>
     <description>A graphical interface for EPUBCheck.</description>
@@ -22,7 +22,7 @@
         <openjfx.version>20</openjfx.version>
         <ikonli.version>12.3.1</ikonli.version>
 
-        <main.class>de.pascalwagler.epubcheckfx.ui.App</main.class>
+        <main.class>de.pascalwagler.epubcheckfx.App</main.class>
 
         <project.assembly.sourceDir>${project.basedir}/src/main/assembly</project.assembly.sourceDir>
         <project.notRunnableJar.name>${project.name}-${project.version}-not-runnable.jar</project.notRunnableJar.name>
@@ -233,10 +233,17 @@
             <artifactId>ikonli-javafx</artifactId>
             <version>${ikonli.version}</version>
         </dependency>
+
+        <!-- for export formats -->
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
             <version>0.9.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.10.0</version>
         </dependency>
     </dependencies>
 

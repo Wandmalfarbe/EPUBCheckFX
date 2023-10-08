@@ -3,22 +3,26 @@ package de.pascalwagler.epubcheckfx.ui.controller;
 import com.adobe.epubcheck.api.EpubCheck;
 import com.adobe.epubcheck.util.Archive;
 import com.adobe.epubcheck.util.FeatureEnum;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
+import de.pascalwagler.epubcheckfx.App;
 import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import de.pascalwagler.epubcheckfx.model.EpubProfile;
 import de.pascalwagler.epubcheckfx.model.ExportFormat;
 import de.pascalwagler.epubcheckfx.model.InfoMessage;
 import de.pascalwagler.epubcheckfx.model.Severity;
 import de.pascalwagler.epubcheckfx.service.CustomReport;
-import de.pascalwagler.epubcheckfx.ui.SeverityListCell;
-import de.pascalwagler.epubcheckfx.ui.SeverityTableCell;
-import de.pascalwagler.epubcheckfx.ui.TranslatableListCell;
-import de.pascalwagler.epubcheckfx.ui.UiHelper;
+import de.pascalwagler.epubcheckfx.service.ExportService;
+import de.pascalwagler.epubcheckfx.ui.BindingUtil;
+import de.pascalwagler.epubcheckfx.ui.PreferencesUtil;
+import de.pascalwagler.epubcheckfx.ui.UiBuilder;
+import de.pascalwagler.epubcheckfx.ui.cell.ExportFormatListCell;
+import de.pascalwagler.epubcheckfx.ui.cell.SeverityListCell;
+import de.pascalwagler.epubcheckfx.ui.cell.SeverityTableCell;
+import de.pascalwagler.epubcheckfx.ui.cell.TranslatableListCell;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -32,21 +36,22 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Pair;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +88,10 @@ public class MainContentController implements Initializable {
     private TextField resultTableSearchFilter;
     @FXML
     private ComboBox<de.pascalwagler.epubcheckfx.model.Severity> resultTableSeverityFilter;
+    @FXML
+    private ToggleButton viewTable;
+    @FXML
+    private ToggleButton viewList;
 
     @FXML
     private ComboBox<ExportFormat> exportFormat;
@@ -94,6 +103,8 @@ public class MainContentController implements Initializable {
     private File epubFile;
 
     @FXML
+    private ScrollPane scrollValidation;
+    @FXML
     private ScrollPane scrollMetadata;
     @FXML
     private ScrollPane scrollInfo;
@@ -101,6 +112,10 @@ public class MainContentController implements Initializable {
     @FXML
     @Setter
     private MainWindowController mainWindowController;
+
+    @FXML
+    @Setter
+    private MenuPanelController menuPanelController;
 
     @FXML
     @Setter
@@ -126,8 +141,13 @@ public class MainContentController implements Initializable {
             log.error("Unexpected Exception when creating the temporary directory.");
             throw new RuntimeException(e);
         }
+
+        filteredErrorList = customReport.errorList.filtered(checkMessage -> true);
+
         initValidationResultTable();
+        initValidationResultList();
         initSeverityFilter();
+        initViewToggle();
         initExportFormat();
         initEpubProfile();
         epubcheckVersion.setText("EPUBCheck Version " + EpubCheck.version() + " - (Built " + EpubCheck.buildDate() + ")");
@@ -156,6 +176,26 @@ public class MainContentController implements Initializable {
         return a.ordinal() >= b.ordinal();
     }
 
+    public void viewTable() {
+        changeViewMode(true);
+    }
+
+    public void viewList() {
+        changeViewMode(false);
+    }
+
+    private void changeViewMode(boolean isTable) {
+
+        App.userPreferences.put(App.PREFERENCES_VIEW, isTable ? "table" : "list");
+
+        viewTable.setSelected(isTable);
+        viewList.setSelected(!isTable);
+        validationResultTable.setVisible(isTable);
+        validationResultTable.setManaged(isTable);
+        scrollValidation.setVisible(!isTable);
+        scrollValidation.setManaged(!isTable);
+    }
+
     public void clearFilter() {
         resultTableSearchFilter.setText("");
         resultTableSeverityFilter.getSelectionModel().select(de.pascalwagler.epubcheckfx.model.Severity.INFO);
@@ -179,9 +219,8 @@ public class MainContentController implements Initializable {
             filteredErrorList.setPredicate(tableFilterPredicate(resultTableSearchFilter.getText(), newValue));
         });
 
-        filteredErrorList = customReport.errorList.filtered(checkMessage -> true);
-        Property<ObservableList<CheckMessage>> authorListProperty = new SimpleObjectProperty<>(filteredErrorList);
-        validationResultTable.itemsProperty().bind(authorListProperty);
+        Property<ObservableList<CheckMessage>> filteredErrorListProperty = new SimpleObjectProperty<>(filteredErrorList);
+        validationResultTable.itemsProperty().bind(filteredErrorListProperty);
 
         summaryPanelController.setFilteredErrorList(filteredErrorList);
 
@@ -193,6 +232,18 @@ public class MainContentController implements Initializable {
         path.setCellValueFactory(new PropertyValueFactory<>("path"));
         line.setCellValueFactory(new PropertyValueFactory<>("line"));
         column.setCellValueFactory(new PropertyValueFactory<>("column"));
+
+        validationResultTable.setVisible(false);
+        validationResultTable.setManaged(false);
+    }
+
+    private void initValidationResultList() {
+
+        VBox validationResultListVBox = new VBox();
+        ObservableList<Node> nodes = FXCollections.observableArrayList();
+        BindingUtil.mapContent(nodes, filteredErrorList, UiBuilder::createListCell);
+        Bindings.bindContent(validationResultListVBox.getChildren(), nodes);
+        scrollValidation.setContent(validationResultListVBox);
     }
 
     private TableCell<CheckMessage, String> createWrappingTableCell(TableColumn<CheckMessage, String> tableColumn) {
@@ -217,19 +268,29 @@ public class MainContentController implements Initializable {
         );
         resultTableSeverityFilter.setButtonCell(resultTableSeverityFilter.getCellFactory().call(null));
         resultTableSeverityFilter.setCellFactory(cell -> new SeverityListCell(resourceBundle));
-        resultTableSeverityFilter.getSelectionModel().select(de.pascalwagler.epubcheckfx.model.Severity.INFO);
+        PreferencesUtil.syncWithPreferences(resultTableSeverityFilter, Severity.INFO, App.PREFERENCES_SEVERITY);
+    }
+
+    private void initViewToggle() {
+        String selectedView = App.userPreferences.get(App.PREFERENCES_VIEW, "table");
+        changeViewMode(selectedView.equals("table"));
     }
 
     private void initExportFormat() {
-        exportFormat.setCellFactory(listView -> new TranslatableListCell<>(resourceBundle));
+        exportFormat.setCellFactory(listView -> new ExportFormatListCell(resourceBundle));
         exportFormat.getItems().addAll(
                 ExportFormat.HTML,
                 ExportFormat.MARKDOWN,
-                ExportFormat.MARKDOWN_LIST,
+                ExportFormat.ASCIIDOC,
+                ExportFormat.RESTRUCTUREDTEXT,
+                ExportFormat.TEXTILE,
                 ExportFormat.PLAINTEXT,
-                ExportFormat.EPUB_CHECKER_TXT);
-        exportFormat.setButtonCell(exportFormat.getCellFactory().call(null));
-        exportFormat.getSelectionModel().selectFirst();
+                ExportFormat.EPUB_CHECKER_TXT,
+                ExportFormat.CSV,
+                ExportFormat.TSV);
+        exportFormat.setButtonCell(new TranslatableListCell<>(resourceBundle));
+        PreferencesUtil.syncWithPreferences(exportFormat, ExportFormat.HTML, App.PREFERENCES_EXPORT_FORMAT);
+
     }
 
     private void initEpubProfile() {
@@ -241,7 +302,7 @@ public class MainContentController implements Initializable {
                 EpubProfile.IDX,
                 EpubProfile.PREVIEW);
         epubProfile.setButtonCell(epubProfile.getCellFactory().call(null));
-        epubProfile.getSelectionModel().selectFirst();
+        PreferencesUtil.syncWithPreferences(epubProfile, EpubProfile.DEFAULT, App.PREFERENCES_EPUB_PROFILE);
     }
 
     public void runEpubCheck(File file) {
@@ -274,12 +335,12 @@ public class MainContentController implements Initializable {
                 } else {
                     epubToValidate = epubFile;
                 }
-                EpubCheck epubcheck = new EpubCheck(epubToValidate, customReport, epubProfile.getValue().getEpubProfile());
+                EpubCheck epubcheck = new EpubCheck(epubToValidate, customReport, epubProfile.getValue().getEpubcheckEpubProfile());
                 epubcheck.check();
 
                 Map<String, List<Pair<FeatureEnum, String>>> infoMap = toMap();
-                Node metadataPane = UiHelper.createMetadataPane(infoMap, resourceBundle);
-                Node infoPane = UiHelper.createInfoPane(infoMap, resourceBundle);
+                Node metadataPane = UiBuilder.createMetadataPane(infoMap, resourceBundle);
+                Node infoPane = UiBuilder.createInfoPane(infoMap, resourceBundle);
 
                 Platform.runLater(() -> {
                     scrollMetadata.setContent(metadataPane);
@@ -330,24 +391,29 @@ public class MainContentController implements Initializable {
     public void export() throws IOException {
 
         ExportFormat selectedExportFormat = exportFormat.getValue();
-
-        MustacheFactory mf = new DefaultMustacheFactory();
-        InputStreamReader inputStreamReader = new InputStreamReader(getClass().getResource("/mustache/" + selectedExportFormat.getName() + ".mustache").openStream());
-        Mustache mustache = mf.compile(inputStreamReader, "Blah");
-
-        Map<String, Object> context = new HashMap<>();
-        context.put("validationResult", customReport.errorList);
-        context.put("infoResult", customReport.infoList);
-
+        String[] extensions = Arrays.stream(selectedExportFormat.getExtensions())
+                .map(s -> "*." + s)
+                .toArray(String[]::new);
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save");
-        fileChooser.setInitialFileName("EPUBCheckFX-Report");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*." + selectedExportFormat.getExtension()));
+        fileChooser.setTitle(resourceBundle.getString("report.file_chooser.title"));
+        fileChooser.setInitialFileName(resourceBundle.getString("report.filename"));
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter(
+                resourceBundle.getString(selectedExportFormat.getI18nKey()),
+                extensions));
         File file = fileChooser.showSaveDialog(exportFormat.getScene().getWindow());
 
-        if (file != null) {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            mustache.execute(writer, context).flush();
+        if (file == null) {
+            return;
+        }
+
+        switch (selectedExportFormat) {
+            case CSV:
+            case TSV:
+                ExportService.exportCsvTsv(customReport.errorList, selectedExportFormat, file, resourceBundle);
+                break;
+            default:
+                ExportService.exportWithMustache(customReport.errorList, selectedExportFormat, file, resourceBundle);
+                break;
         }
     }
 }

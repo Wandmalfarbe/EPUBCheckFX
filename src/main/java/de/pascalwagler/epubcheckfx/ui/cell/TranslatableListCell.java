@@ -1,5 +1,6 @@
-package de.pascalwagler.epubcheckfx.ui;
+package de.pascalwagler.epubcheckfx.ui.cell;
 
+import de.pascalwagler.epubcheckfx.ui.Translatable;
 import javafx.scene.control.ListCell;
 
 import java.util.ResourceBundle;

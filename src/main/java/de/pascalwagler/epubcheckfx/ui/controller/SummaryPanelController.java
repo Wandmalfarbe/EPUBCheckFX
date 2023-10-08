@@ -2,7 +2,7 @@ package de.pascalwagler.epubcheckfx.ui.controller;
 
 import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import de.pascalwagler.epubcheckfx.model.Severity;
-import de.pascalwagler.epubcheckfx.ui.UiHelper;
+import de.pascalwagler.epubcheckfx.ui.UiBuilder;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
@@ -34,7 +34,7 @@ public class SummaryPanelController implements Initializable {
         final Severity[] severities = Severity.values();
 
         for (int i = 0; i < severities.length; i++) {
-            Label severitySummaryLabel = new Label("", UiHelper.createSeverityIcon(severities[i]));
+            Label severitySummaryLabel = new Label("", UiBuilder.createSeverityIcon(severities[i]));
             summaryPanel.getChildren().add(severitySummaryLabel);
             severitySummaryLabels[i] = severitySummaryLabel;
         }
