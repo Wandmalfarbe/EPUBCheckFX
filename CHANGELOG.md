@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file. On the [releases page](https://github.com/Wandmalfarbe/EPUBCheckFX/releases) you can see all released versions of EPUBCheckFX and download the [latest version](https://github.com/Wandmalfarbe/EPUBCheckFX/releases/latest).
 
+## Unreleased
+
+- Renamed the tabs *Metadata* and *General Information* to *General Metadata* and *File Metadata*.
+- Fixed the section naming in the *Metadata* tab.
+- Updated dependencies
+
 ## [1.2.0] - 2023-10-05
 
 - Add the following export formats:
