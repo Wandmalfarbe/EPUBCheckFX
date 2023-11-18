@@ -2,7 +2,7 @@
 
 # EPUBCheckFX
 
-An unofficial graphical interface for the official [W3C EPUBCheck](https://www.w3.org/publishing/epubcheck/) conformance checker.
+A graphical interface for the official [W3C EPUBCheck](https://www.w3.org/publishing/epubcheck/) conformance checker.
 
 ## Screenshots
 
@@ -59,7 +59,6 @@ mvn clean package
 ## Known Issues / Bugs
 
 - The App is only translated in English and German.
-- It is not really possible to cancel the validation despite there being a cancel button. The button just closes the progress overlay but the validation still continues.
 - It is not possible to select an EPUB folder with the button on the start page. One can however drag an EPUB folder on the window to validate it.
 
 ## Credits
