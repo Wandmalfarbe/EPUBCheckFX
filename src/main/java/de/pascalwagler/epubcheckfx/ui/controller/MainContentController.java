@@ -3,7 +3,7 @@ package de.pascalwagler.epubcheckfx.ui.controller;
 import com.adobe.epubcheck.api.EpubCheck;
 import com.adobe.epubcheck.util.Archive;
 import com.adobe.epubcheck.util.FeatureEnum;
-import de.pascalwagler.epubcheckfx.App;
+import de.pascalwagler.epubcheckfx.exception.CreateTempDirException;
 import de.pascalwagler.epubcheckfx.model.CheckMessage;
 import de.pascalwagler.epubcheckfx.model.EpubProfile;
 import de.pascalwagler.epubcheckfx.model.ExportFormat;
@@ -59,6 +59,14 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
+
+import static de.pascalwagler.epubcheckfx.App.PREFERENCES_EPUB_PROFILE;
+import static de.pascalwagler.epubcheckfx.App.PREFERENCES_EXPORT_FORMAT;
+import static de.pascalwagler.epubcheckfx.App.PREFERENCES_SEVERITY;
+import static de.pascalwagler.epubcheckfx.App.PREFERENCES_VIEW;
+import static de.pascalwagler.epubcheckfx.App.PREFERENCES_VIEW_VALUE_LIST;
+import static de.pascalwagler.epubcheckfx.App.PREFERENCES_VIEW_VALUE_TABLE;
+import static de.pascalwagler.epubcheckfx.App.userPreferences;
 
 @Slf4j
 public class MainContentController implements Initializable {
@@ -138,8 +146,9 @@ public class MainContentController implements Initializable {
                 Files.createDirectory(tempDirectory.toPath());
             }
         } catch (IOException e) {
-            log.error("Unexpected Exception when creating the temporary directory.");
-            throw new RuntimeException(e);
+            log.error("Unexpected Exception when creating the temporary directory '{}'.", tempDirectory.toPath(), e);
+            throw new CreateTempDirException("Unexpected Exception when creating " +
+                    "the temporary directory '" + tempDirectory.toPath() + "'.", e);
         }
 
         filteredErrorList = customReport.errorList.filtered(checkMessage -> true);
@@ -186,7 +195,7 @@ public class MainContentController implements Initializable {
 
     private void changeViewMode(boolean isTable) {
 
-        App.userPreferences.put(App.PREFERENCES_VIEW, isTable ? "table" : "list");
+        userPreferences.put(PREFERENCES_VIEW, isTable ? PREFERENCES_VIEW_VALUE_TABLE : PREFERENCES_VIEW_VALUE_LIST);
 
         viewTable.setSelected(isTable);
         viewList.setSelected(!isTable);
@@ -268,12 +277,12 @@ public class MainContentController implements Initializable {
         );
         resultTableSeverityFilter.setButtonCell(resultTableSeverityFilter.getCellFactory().call(null));
         resultTableSeverityFilter.setCellFactory(cell -> new SeverityListCell(resourceBundle));
-        PreferencesUtil.syncWithPreferences(resultTableSeverityFilter, Severity.INFO, App.PREFERENCES_SEVERITY);
+        PreferencesUtil.syncWithPreferences(resultTableSeverityFilter, Severity.INFO, PREFERENCES_SEVERITY);
     }
 
     private void initViewToggle() {
-        String selectedView = App.userPreferences.get(App.PREFERENCES_VIEW, "table");
-        changeViewMode(selectedView.equals("table"));
+        String selectedView = userPreferences.get(PREFERENCES_VIEW, PREFERENCES_VIEW_VALUE_TABLE);
+        changeViewMode(selectedView.equals(PREFERENCES_VIEW_VALUE_TABLE));
     }
 
     private void initExportFormat() {
@@ -289,7 +298,7 @@ public class MainContentController implements Initializable {
                 ExportFormat.CSV,
                 ExportFormat.TSV);
         exportFormat.setButtonCell(new TranslatableListCell<>(resourceBundle));
-        PreferencesUtil.syncWithPreferences(exportFormat, ExportFormat.HTML, App.PREFERENCES_EXPORT_FORMAT);
+        PreferencesUtil.syncWithPreferences(exportFormat, ExportFormat.HTML, PREFERENCES_EXPORT_FORMAT);
 
     }
 
@@ -302,7 +311,7 @@ public class MainContentController implements Initializable {
                 EpubProfile.IDX,
                 EpubProfile.PREVIEW);
         epubProfile.setButtonCell(epubProfile.getCellFactory().call(null));
-        PreferencesUtil.syncWithPreferences(epubProfile, EpubProfile.DEFAULT, App.PREFERENCES_EPUB_PROFILE);
+        PreferencesUtil.syncWithPreferences(epubProfile, EpubProfile.DEFAULT, PREFERENCES_EPUB_PROFILE);
     }
 
     public void runEpubCheck(File file) {

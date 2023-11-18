@@ -25,10 +25,13 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UiBuilder {
+
+    private static final String I18N_FEATURE_PREFIX = "feature.";
 
     public static FontIcon createSeverityIcon(Severity severity) {
         FontIcon fontIcon = new FontIcon(severity.getIcon());
@@ -112,8 +115,8 @@ public class UiBuilder {
 
                 String featureEnumName = pair.getKey().name().toLowerCase();
                 String labelTranslated;
-                if (resourceBundle.containsKey("feature." + featureEnumName)) {
-                    labelTranslated = resourceBundle.getString("feature." + featureEnumName);
+                if (resourceBundle.containsKey(I18N_FEATURE_PREFIX + featureEnumName)) {
+                    labelTranslated = resourceBundle.getString(I18N_FEATURE_PREFIX + featureEnumName);
                 } else {
                     labelTranslated = pair.getKey().toString();
                 }
@@ -143,23 +146,30 @@ public class UiBuilder {
             return vBox;
         }
 
+        Predicate<Pair<FeatureEnum, String>> isDcMetadata = m -> m.getKey().name().toLowerCase().startsWith("dc_");
         List<Pair<FeatureEnum, String>> dublinCoreMetadata = metadata.stream()
-                .filter(m -> m.getKey().name().toLowerCase().startsWith("dc_"))
+                .filter(isDcMetadata)
                 .collect(Collectors.toList());
         List<Pair<FeatureEnum, String>> otherMetadata = metadata.stream()
-                .filter(m -> !m.getKey().name().toLowerCase().startsWith("dc_"))
+                .filter(isDcMetadata.negate())
                 .collect(Collectors.toList());
 
         List<List<Pair<FeatureEnum, String>>> metadataGroups = List.of(dublinCoreMetadata, otherMetadata);
 
-        for (List<Pair<FeatureEnum, String>> metadataGroup : metadataGroups) {
+        for (int j = 0; j < metadataGroups.size(); j++) {
+            List<Pair<FeatureEnum, String>> metadataGroup = metadataGroups.get(j);
             if (metadataGroup.isEmpty()) {
                 continue;
             }
 
             Card card = new Card();
             VBox.setVgrow(card, Priority.ALWAYS);
-            card.setHeader(new Tile(resourceBundle.getString("metadata.dublin_core"), null));
+
+            if (j == 0) {
+                card.setHeader(new Tile(resourceBundle.getString("metadata.dublin_core"), null));
+            } else {
+                card.setHeader(new Tile(resourceBundle.getString("metadata.general"), null));
+            }
 
             GridPane grid = new GridPane();
             grid.setHgap(10);
@@ -178,8 +188,8 @@ public class UiBuilder {
 
                 String featureEnumName = pair.getKey().name().toLowerCase();
                 String labelTranslated;
-                if (resourceBundle.containsKey("feature." + featureEnumName)) {
-                    labelTranslated = resourceBundle.getString("feature." + featureEnumName);
+                if (resourceBundle.containsKey(I18N_FEATURE_PREFIX + featureEnumName)) {
+                    labelTranslated = resourceBundle.getString(I18N_FEATURE_PREFIX + featureEnumName);
                 } else {
                     labelTranslated = pair.getKey().toString();
                 }

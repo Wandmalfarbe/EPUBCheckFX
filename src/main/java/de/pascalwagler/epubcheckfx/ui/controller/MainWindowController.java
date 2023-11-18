@@ -104,10 +104,4 @@ public class MainWindowController implements Initializable {
         dragAndDropAnchorPane.setVisible(false);
         loadingPane.setVisible(false);
     }
-
-    public void cancelValidation() {
-        mainContentAnchorPane.setVisible(true);
-        dragAndDropAnchorPane.setVisible(false);
-        loadingPane.setVisible(false);
-    }
 }

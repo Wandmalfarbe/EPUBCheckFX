@@ -11,7 +11,7 @@
     <downloadUrl>https://adoptium.net/</downloadUrl>
     <stayAlive>true</stayAlive>
     <restartOnCrash>false</restartOnCrash>
-    <!--<icon>icon.ico</icon>-->
+    <icon>EPUBCheckFX.ico</icon>
     <singleInstance>
         <mutexName>de.pascalwagler.epubcheckfx</mutexName>
         <windowTitle>EPUBCheckFX</windowTitle>
@@ -25,10 +25,10 @@
         <opt>-Xss1024k</opt>
     </jre>
     <versionInfo>
-        <fileVersion>1.2.0.0</fileVersion>
-        <txtFileVersion>1.2.0</txtFileVersion>
-        <productVersion>1.2.0.0</productVersion>
-        <txtProductVersion>1.2.0</txtProductVersion>
+        <fileVersion>1.3.0.0</fileVersion>
+        <txtFileVersion>1.3.0</txtFileVersion>
+        <productVersion>1.3.0.0</productVersion>
+        <txtProductVersion>1.3.0</txtProductVersion>
 
         <fileDescription>EPUBCheckFX</fileDescription>
         <copyright>Pascal Wagler</copyright>

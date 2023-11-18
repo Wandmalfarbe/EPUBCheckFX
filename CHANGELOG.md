@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented in this file. On the [releases page](https://github.com/Wandmalfarbe/EPUBCheckFX/releases) you can see all released versions of EPUBCheckFX and download the [latest version](https://github.com/Wandmalfarbe/EPUBCheckFX/releases/latest).
 
+## [1.3.0] - 2023-11-18
+
+- Renamed the tabs *Metadata* and *General Information* to *General Metadata* and *File Metadata*.
+- Fixed the section naming in the *Metadata* tab.
+- Generate icons as part of the maven build. One has to enable this via uncommenting the relevant lines in the `pom.xml`.
+- The Windows Executable should now have an icon.
+- Fixed some SonarLint findings.
+- There is no cancel button anymore to cancel the validation. The button wasn't really doing anything.
+- Updated dependencies
+
 ## [1.2.0] - 2023-10-05
 
 - Add the following export formats:
@@ -34,6 +44,7 @@ All notable changes to this project are documented in this file. On the [release
 
 Initial release with different executables for Windows, macOS and Linux.
 
+[1.3.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.2.0...1.3.0
 [1.2.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.1.0...1.2.0
 [1.1.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.0.0...1.1.0
 [1.0.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/releases/tag/v1.0.0

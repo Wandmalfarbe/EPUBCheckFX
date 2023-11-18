@@ -105,12 +105,12 @@
                                 </VBox>
                             </content>
                         </Tab>
-                        <Tab text="%result_tab.metadata">
+                        <Tab text="%result_tab.general_metadata">
                             <content>
                                 <ScrollPane fx:id="scrollMetadata" fitToWidth="true"/>
                             </content>
                         </Tab>
-                        <Tab text="%result_tab.info">
+                        <Tab text="%result_tab.file_metadata">
                             <content>
                                 <ScrollPane fx:id="scrollInfo" fitToWidth="true"/>
                             </content>

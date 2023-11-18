@@ -2,6 +2,8 @@ package de.pascalwagler.epubcheckfx.ui;
 
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.function.Function;
@@ -9,8 +11,9 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
 
 /**
- * From https://stackoverflow.com/a/43914715
+ * From <a href="https://stackoverflow.com/a/43914715">Stackoverflow</a>
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BindingUtil {
 
     public static <E, F> void mapContent(ObservableList<F> mapped, ObservableList<? extends E> source,
@@ -76,8 +79,7 @@ public class BindingUtil {
 
             if (obj instanceof ListContentMapping) {
                 final ListContentMapping<?, ?> other = (ListContentMapping<?, ?>) obj;
-                final List<?> mapped2 = other.mapped;
-                return mapped1 == mapped2;
+                return mapped1 == other.mapped;
             }
             return false;
         }

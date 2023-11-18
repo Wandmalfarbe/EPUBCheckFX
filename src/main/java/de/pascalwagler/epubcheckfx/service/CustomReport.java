@@ -25,7 +25,7 @@ public class CustomReport implements Report {
 
     @Override
     public void initialize() {
-
+        // There is no initialization to be performed.
     }
 
     @Override
@@ -34,23 +34,21 @@ public class CustomReport implements Report {
         String formattedMessage = String.format(localizedMessage, objects);
         Severity severity = localizedMessages.getMessage(messageId).getSeverity();
 
-        Platform.runLater(() -> {
-            errorList.add(CheckMessage.builder()
-                    .messageId(messageId)
-                    .message(formattedMessage)
-                    .severity(de.pascalwagler.epubcheckfx.model.Severity.fromEpubcheckSeverity(severity))
-                    .suggestion(localizedMessages.getSuggestion(messageId))
-                    .path(epubLocation.path)
-                    .line(epubLocation.line != -1 ? epubLocation.line : null)
-                    .column(epubLocation.column != -1 ? epubLocation.column : null)
-                    .objects(objects)
-                    .build());
-        });
+        Platform.runLater(() -> errorList.add(CheckMessage.builder()
+                .messageId(messageId)
+                .message(formattedMessage)
+                .severity(de.pascalwagler.epubcheckfx.model.Severity.fromEpubcheckSeverity(severity))
+                .suggestion(localizedMessages.getSuggestion(messageId))
+                .path(epubLocation.path)
+                .line(epubLocation.line != -1 ? epubLocation.line : null)
+                .column(epubLocation.column != -1 ? epubLocation.column : null)
+                .objects(objects)
+                .build()));
     }
 
     @Override
     public void message(Message message, EPUBLocation epubLocation, Object... objects) {
-
+        // I don't really know what this callback does. the message callback above seems to suffice.
     }
 
     @Override
@@ -65,35 +63,35 @@ public class CustomReport implements Report {
     @Override
     public int getErrorCount() {
         return (int) errorList.stream()
-                .filter(checkMessage -> Severity.ERROR.equals(checkMessage.getSeverity()))
+                .filter(checkMessage -> Severity.ERROR.equals(checkMessage.getSeverity().getEbubcheckSeverity()))
                 .count();
     }
 
     @Override
     public int getWarningCount() {
         return (int) errorList.stream()
-                .filter(checkMessage -> Severity.WARNING.equals(checkMessage.getSeverity()))
+                .filter(checkMessage -> Severity.WARNING.equals(checkMessage.getSeverity().getEbubcheckSeverity()))
                 .count();
     }
 
     @Override
     public int getFatalErrorCount() {
         return (int) errorList.stream()
-                .filter(checkMessage -> Severity.FATAL.equals(checkMessage.getSeverity()))
+                .filter(checkMessage -> Severity.FATAL.equals(checkMessage.getSeverity().getEbubcheckSeverity()))
                 .count();
     }
 
     @Override
     public int getInfoCount() {
         return (int) errorList.stream()
-                .filter(checkMessage -> Severity.INFO.equals(checkMessage.getSeverity()))
+                .filter(checkMessage -> Severity.INFO.equals(checkMessage.getSeverity().getEbubcheckSeverity()))
                 .count();
     }
 
     @Override
     public int getUsageCount() {
         return (int) errorList.stream()
-                .filter(checkMessage -> Severity.ERROR.equals(checkMessage.getSeverity()))
+                .filter(checkMessage -> Severity.ERROR.equals(checkMessage.getSeverity().getEbubcheckSeverity()))
                 .count();
     }
 
@@ -104,7 +102,7 @@ public class CustomReport implements Report {
 
     @Override
     public void setEpubFileName(String s) {
-
+        // Unnecessary for current report generation
     }
 
     @Override
@@ -114,7 +112,7 @@ public class CustomReport implements Report {
 
     @Override
     public void setCustomMessageFile(String s) {
-
+        // Unnecessary for current report generation
     }
 
     @Override
@@ -129,17 +127,17 @@ public class CustomReport implements Report {
 
     @Override
     public void setReportingLevel(int i) {
-
+        // Unnecessary for current report generation
     }
 
     @Override
     public void close() {
-
+        // Unnecessary for current report generation
     }
 
     @Override
     public void setOverrideFile(File file) {
-
+        // Unnecessary for current report generation
     }
 
     @Override
