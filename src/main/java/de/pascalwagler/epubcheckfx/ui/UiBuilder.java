@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UiBuilder {
 
+    private static final String I18N_FEATURE_PREFIX = "feature.";
+
     public static FontIcon createSeverityIcon(Severity severity) {
         FontIcon fontIcon = new FontIcon(severity.getIcon());
         fontIcon.getStyleClass().add(severity.getColorStyleClass());
@@ -113,8 +115,8 @@ public class UiBuilder {
 
                 String featureEnumName = pair.getKey().name().toLowerCase();
                 String labelTranslated;
-                if (resourceBundle.containsKey("feature." + featureEnumName)) {
-                    labelTranslated = resourceBundle.getString("feature." + featureEnumName);
+                if (resourceBundle.containsKey(I18N_FEATURE_PREFIX + featureEnumName)) {
+                    labelTranslated = resourceBundle.getString(I18N_FEATURE_PREFIX + featureEnumName);
                 } else {
                     labelTranslated = pair.getKey().toString();
                 }
@@ -186,8 +188,8 @@ public class UiBuilder {
 
                 String featureEnumName = pair.getKey().name().toLowerCase();
                 String labelTranslated;
-                if (resourceBundle.containsKey("feature." + featureEnumName)) {
-                    labelTranslated = resourceBundle.getString("feature." + featureEnumName);
+                if (resourceBundle.containsKey(I18N_FEATURE_PREFIX + featureEnumName)) {
+                    labelTranslated = resourceBundle.getString(I18N_FEATURE_PREFIX + featureEnumName);
                 } else {
                     labelTranslated = pair.getKey().toString();
                 }

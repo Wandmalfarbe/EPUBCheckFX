@@ -11,7 +11,7 @@
     <downloadUrl>https://adoptium.net/</downloadUrl>
     <stayAlive>true</stayAlive>
     <restartOnCrash>false</restartOnCrash>
-    <!--<icon>icon.ico</icon>-->
+    <icon>EPUBCheckFX.ico</icon>
     <singleInstance>
         <mutexName>de.pascalwagler.epubcheckfx</mutexName>
         <windowTitle>EPUBCheckFX</windowTitle>

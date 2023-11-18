@@ -38,6 +38,8 @@ public class App extends Application {
     public static final String PREFERENCES_EPUB_PROFILE = "epub_profile";
     public static final String PREFERENCES_THEME = "theme";
     public static final String PREFERENCES_VIEW = "view";
+    public static final String PREFERENCES_VIEW_VALUE_TABLE = "table";
+    public static final String PREFERENCES_VIEW_VALUE_LIST = "list";
 
     @Override
     public void start(Stage stage) throws Exception {

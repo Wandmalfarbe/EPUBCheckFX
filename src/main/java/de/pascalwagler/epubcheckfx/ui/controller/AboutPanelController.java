@@ -23,8 +23,6 @@ public class AboutPanelController implements Initializable {
     @FXML
     VBox thirdPartyLicensePane;
 
-    private ResourceBundle resourceBundle;
-
     @Data
     private static class License {
         private final String name;
@@ -45,20 +43,11 @@ public class AboutPanelController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resourceBundle = resources;
-        try {
-            this.licenseTextArea.setText(getFileContents("/license.txt"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            initThirdPartyLicenses();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.licenseTextArea.setText(getFileContents("/license.txt"));
+        initThirdPartyLicenses();
     }
 
-    private void initThirdPartyLicenses() throws IOException {
+    private void initThirdPartyLicenses() {
         for (License license : licenses) {
             String licenseText = getFileContents("/licenses/" + license.getLicenseFile() + ".txt");
             TextArea textArea = new TextArea(licenseText);
@@ -70,14 +59,20 @@ public class AboutPanelController implements Initializable {
         }
     }
 
-    private String getFileContents(String path) throws IOException {
+    private String getFileContents(String path) {
         URL resource = AboutPanelController.class.getResource(path);
         if (resource == null) {
-            log.error("Could not open file at '{}'.", path);
+            log.error("Could not open file '{}'.", path);
             return null;
         }
-        InputStreamReader inputStreamReader = new InputStreamReader(resource.openStream());
-        Scanner s = new Scanner(inputStreamReader).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : null;
+        try (InputStreamReader inputStreamReader = new InputStreamReader(resource.openStream())) {
+            Scanner scanner = new Scanner(inputStreamReader).useDelimiter("\\A");
+            String fileContent = scanner.hasNext() ? scanner.next() : null;
+            scanner.close();
+            return fileContent;
+        } catch (Exception e) {
+            log.error("Could not read license file '{}'.", path);
+            return null;
+        }
     }
 }

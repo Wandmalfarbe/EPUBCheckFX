@@ -320,6 +320,36 @@
                 </executions>
             </plugin>
 
+            <!-- create icons via shell script -->
+            <!-- This can only run with bash and ImageMagick installed, so it is disabled to enable a build on all platforms. -->
+            <!--<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>create-icons</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>./tools/create-icons.sh</executable>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-java-icons</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>./tools/create-java-icons.sh</executable>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+
             <!-- create windows executable -->
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
@@ -342,7 +372,7 @@
             </plugin>
 
             <!-- create macOS app and disk image -->
-            <!-- This plugin can only be run on macOS, so it is disabled for now. -->
+            <!-- This plugin can only be run on macOS, so it is disabled to enable a build on all platforms. -->
             <!--<plugin>
                 <groupId>de.perdian.maven.plugins</groupId>
                 <artifactId>macosappbundler-maven-plugin</artifactId>

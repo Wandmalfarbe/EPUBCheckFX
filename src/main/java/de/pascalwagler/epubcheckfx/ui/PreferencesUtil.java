@@ -11,12 +11,13 @@ public class PreferencesUtil {
      * Restores the last selected value of the comboBox from Preferences or applies a defaultValue.
      * This method also adds a Listener to save the last selected value in the Preferences under preferencesKey.
      */
-    public static <SomeComboBox extends javafx.scene.control.ComboBox<SomeEnum>, SomeEnum extends Enum<?>> void syncWithPreferences(
-            SomeComboBox someComboBox, SomeEnum defaultValue, String preferencesKey) {
+    public static <C extends javafx.scene.control.ComboBox<E>, E extends Enum<?>> void syncWithPreferences(
+            C someComboBox, E defaultValue, String preferencesKey) {
 
         // select the previously saved option (or the default value)
         String selectedSeverity = App.userPreferences.get(preferencesKey, defaultValue.name());
-        SomeEnum selected = (SomeEnum) SomeEnum.valueOf(defaultValue.getClass(), selectedSeverity);
+        @SuppressWarnings("unchecked")
+        E selected = (E) E.valueOf(defaultValue.getClass(), selectedSeverity);
         someComboBox.getSelectionModel().select(selected);
 
         // save selection in preferences

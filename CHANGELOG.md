@@ -6,6 +6,10 @@ All notable changes to this project are documented in this file. On the [release
 
 - Renamed the tabs *Metadata* and *General Information* to *General Metadata* and *File Metadata*.
 - Fixed the section naming in the *Metadata* tab.
+- Generate icons as part of the maven build. One has to enable this via uncommenting the relevant lines in the `pom.xml`.
+- The Windows Executable should now have an icon.
+- Fixed some SonarLint findings.
+- There is no cancel button anymore to cancel the validation. The button wasn't really doing anything.
 - Updated dependencies
 
 ## [1.2.0] - 2023-10-05
