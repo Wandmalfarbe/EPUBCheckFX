@@ -59,6 +59,13 @@ In order to build the runnable JAR file and all other artifacts, you have to run
 mvn clean package
 ```
 
+The macOS build is only possible on Macs and disabled during the normal build. You have to pass the profile `macos` to
+Maven in order to build the `dmg` file:
+
+```
+mvn clean package -Pmacos
+```
+
 ## Known Issues / Bugs
 
 - The App is only translated in English and German.

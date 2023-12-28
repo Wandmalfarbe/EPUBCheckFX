@@ -37,6 +37,46 @@
         </repository>
     </repositories>
 
+    <profiles>
+        <profile>
+            <id>macos</id>
+            <build>
+                <plugins>
+                    <!-- create macOS app and disk image -->
+                    <!-- This plugin can only be run on macOS, so it is disabled on a normal build.
+                         Use -Pmacos to enable it. -->
+                    <plugin>
+                        <groupId>de.perdian.maven.plugins</groupId>
+                        <artifactId>macosappbundler-maven-plugin</artifactId>
+                        <version>1.19.0</version>
+                        <configuration>
+                            <plist>
+                                <CFBundleIconFile>src/main/assembly/dist-macos/EPUBCheckFX.icns</CFBundleIconFile>
+                                <NSHumanReadableCopyright>Copyright © 2023 Pascal Wagler. All rights reserved.
+                                </NSHumanReadableCopyright>
+
+                                <JVMMainClassName>de.pascalwagler.epubcheckfx.ui.Launcher</JVMMainClassName>
+                            </plist>
+                            <dmg>
+                                <generate>true</generate>
+                                <appendVersion>false</appendVersion>
+                                <dmgFileName>${project.name}-${project.version}-macOS-x86_64</dmgFileName>
+                            </dmg>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>bundle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
         <!-- build cross-platform fat JAR -->
         <!-- see https://github.com/openjfx/javafx-maven-plugin/issues/58 and https://github.com/betanzos/cross-platform-app-fx -->
@@ -370,36 +410,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- create macOS app and disk image -->
-            <!-- This plugin can only be run on macOS, so it is disabled to enable a build on all platforms. -->
-            <!--<plugin>
-                <groupId>de.perdian.maven.plugins</groupId>
-                <artifactId>macosappbundler-maven-plugin</artifactId>
-                <version>1.19.0</version>
-                <configuration>
-                    <plist>
-                        <CFBundleIconFile>src/main/assembly/dist-macos/EPUBCheckFX.icns</CFBundleIconFile>
-                        <NSHumanReadableCopyright>Copyright © 2023 Pascal Wagler. All rights reserved.
-                        </NSHumanReadableCopyright>
-
-                        <JVMMainClassName>de.pascalwagler.epubcheckfx.ui.Launcher</JVMMainClassName>
-                    </plist>
-                    <dmg>
-                        <generate>true</generate>
-                        <appendVersion>false</appendVersion>
-                        <dmgFileName>${project.name}-${project.version}-macOS-x86_64</dmgFileName>
-                    </dmg>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
 
             <!-- create packages (ZIP files) for Windows and Linux -->
             <plugin>
