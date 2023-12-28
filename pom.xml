@@ -388,7 +388,7 @@
                     <dmg>
                         <generate>true</generate>
                         <appendVersion>false</appendVersion>
-                        <dmgFileName>${project.name}-${project.version}-macOS</dmgFileName>
+                        <dmgFileName>${project.name}-${project.version}-macOS-x86_64</dmgFileName>
                     </dmg>
                 </configuration>
                 <executions>
