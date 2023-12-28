@@ -24,6 +24,9 @@ Download the correct version of the application for your operating system on the
 
 ### macOS
 
+> [!IMPORTANT]  
+> ARM based Macs are currently unsupported. The macOS application or the JAR file will only run on intel based Macs.
+
 1. Double-click the downloaded disk image (DMG file).
 2. Drag the application `EPUBCheckFX` into the `Application` folder.
 3. Start the application `EPUBCheckFX` from the `Application` folder by double-clicking.
