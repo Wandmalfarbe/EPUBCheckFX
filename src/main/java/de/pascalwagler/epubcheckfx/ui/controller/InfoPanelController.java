@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
@@ -76,5 +77,13 @@ public class InfoPanelController implements Initializable {
         }
         creator.getStyleClass().remove(Styles.TEXT_SUBTLE);
         creator.setText(titleString);
+    }
+
+    public void openFile() {
+        String text = this.file.getText();
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+        Desktop.getDesktop().browseFileDirectory(new File(text));
     }
 }

@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<GridPane hgap="10.0" minWidth="200" prefWidth="300" fx:controller="de.pascalwagler.epubcheckfx.ui.controller.InfoPanelController"
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<GridPane hgap="10.0" minWidth="200" prefWidth="300"
+          fx:controller="de.pascalwagler.epubcheckfx.ui.controller.InfoPanelController"
           xmlns="http://javafx.com/javafx/20.0.0" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
         <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="10.0" prefWidth="63.0"/>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" prefWidth="200.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="22" />
-        <RowConstraints minHeight="22" />
-        <RowConstraints minHeight="22" />
+        <RowConstraints valignment="CENTER" minHeight="22"/>
+        <RowConstraints valignment="CENTER" minHeight="22"/>
+        <RowConstraints valignment="CENTER" minHeight="22"/>
     </rowConstraints>
     <children>
         <Label text="%info_panel.file" styleClass="font-bold">
@@ -32,7 +37,20 @@
                 <Font name="System Bold"/>
             </font>
         </Label>
-        <Label fx:id="file" GridPane.columnIndex="1"/>
+
+
+        <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="200.0" GridPane.columnIndex="1"
+              GridPane.rowIndex="0" onMouseClicked="#openFile">
+            <Label fx:id="file"/>
+            <Button styleClass="button-icon,flat,small" mnemonicParsing="false" onAction="#openFile">
+                <graphic>
+                    <FontIcon iconLiteral="mdmz-open_in_new" iconSize="16" styleClass="icon-small"/>
+                </graphic>
+                <HBox.margin>
+                    <Insets left="5"/>
+                </HBox.margin>
+            </Button>
+        </HBox>
         <Label fx:id="title" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
         <Label fx:id="creator" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
     </children>
