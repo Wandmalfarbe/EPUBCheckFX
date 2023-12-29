@@ -10,8 +10,11 @@
 }
 
 /**
- * Workaround for large icons in the fxml files. The size there (iconSize="64") is not applied when using AtlantaFX.
+ * Workaround for small/large icons in the fxml files. The size there (iconSize="64") is not applied when using AtlantaFX.
  */
+.icon-small {
+    -fx-icon-size: 16px;
+}
 .icon-large {
     -fx-icon-size: 32px;
 }
