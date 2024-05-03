@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file. On the [releases page](https://github.com/Wandmalfarbe/EPUBCheckFX/releases) you can see all released versions of EPUBCheckFX and download the [latest version](https://github.com/Wandmalfarbe/EPUBCheckFX/releases/latest).
 
+## [1.4.0] - 2024-05-03
+
+- Added documentation on building for macOS to the README.
+- Build macOS dmg with GitHub Actions.
+- Open the currently validated EPUB file in file manager (e.g. Finder or Explorer)
+- Updated dependencies
+
 ## [1.3.0] - 2023-11-18
 
 - Renamed the tabs *Metadata* and *General Information* to *General Metadata* and *File Metadata*.
@@ -44,6 +51,7 @@ All notable changes to this project are documented in this file. On the [release
 
 Initial release with different executables for Windows, macOS and Linux.
 
+[1.4.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.3.0...1.4.0
 [1.3.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.2.0...1.3.0
 [1.2.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.1.0...1.2.0
 [1.1.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.0.0...1.1.0
