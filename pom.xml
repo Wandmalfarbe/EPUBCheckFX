@@ -20,7 +20,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <openjfx.version>22.0.1</openjfx.version>
-        <ikonli.version>12.3.1</ikonli.version>
+        <ikonli.version>12.4.0</ikonli.version>
 
         <main.class>de.pascalwagler.epubcheckfx.App</main.class>
 
@@ -34,6 +34,11 @@
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
     </repositories>
 
@@ -235,13 +240,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.32</version>
+            <version>1.18.38</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.18</version>
         </dependency>
         <dependency>
             <groupId>com.github.Dansoftowner</groupId>
@@ -256,7 +261,7 @@
         <dependency>
             <groupId>org.w3c</groupId>
             <artifactId>epubcheck</artifactId>
-            <version>5.1.0</version>
+            <version>5.2.1</version>
         </dependency>
         <!-- The icon dependency needs to be included before the ikonli-javafx dependency or the
         runnable jar built with the maven-shade-plugin will exit with the
@@ -278,12 +283,12 @@
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
-            <version>0.9.13</version>
+            <version>0.9.14</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>1.11.0</version>
+            <version>1.14.0</version>
         </dependency>
     </dependencies>
 
