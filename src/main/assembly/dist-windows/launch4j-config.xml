@@ -19,16 +19,16 @@
     <jre>
         <bundledJre64Bit>false</bundledJre64Bit>
         <bundledJreAsFallback>false</bundledJreAsFallback>
-        <minVersion>17</minVersion>
+        <minVersion>21</minVersion>
         <jdkPreference>preferJre</jdkPreference>
         <runtimeBits>64/32</runtimeBits>
         <opt>-Xss1024k</opt>
     </jre>
     <versionInfo>
-        <fileVersion>1.4.0.0</fileVersion>
-        <txtFileVersion>1.4.0</txtFileVersion>
-        <productVersion>1.4.0.0</productVersion>
-        <txtProductVersion>1.4.0</txtProductVersion>
+        <fileVersion>1.5.0.0</fileVersion>
+        <txtFileVersion>1.5.0</txtFileVersion>
+        <productVersion>1.5.0.0</productVersion>
+        <txtProductVersion>1.5.0</txtProductVersion>
 
         <fileDescription>EPUBCheckFX</fileDescription>
         <copyright>Pascal Wagler</copyright>
