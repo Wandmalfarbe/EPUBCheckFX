@@ -57,9 +57,9 @@ All notable changes to this project are documented in this file. On the [release
 
 Initial release with different executables for Windows, macOS and Linux.
 
-[1.5.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.4.0...1.5.0
-[1.4.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.3.0...1.4.0
-[1.3.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.2.0...1.3.0
-[1.2.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.1.0...1.2.0
-[1.1.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.0.0...1.1.0
+[1.5.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.4.0...v1.5.0
+[1.4.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/releases/tag/v1.0.0
