@@ -13,7 +13,7 @@ A graphical interface for the official [W3C EPUBCheck](https://www.w3.org/publis
 ## Installation / Usage
 
 > [!IMPORTANT]  
-> An installation of [Java 17](https://adoptium.net/) or later is required to run the application.
+> An installation of [Java 21](https://adoptium.net/) or later is required to run the application.
 
 Download the correct version of the application for your operating system on the [releases page](https://github.com/Wandmalfarbe/EPUBCheckFX/releases).
 
@@ -50,7 +50,7 @@ Please refer to the EPUBCheck documentation at https://www.w3.org/publishing/epu
 
 Install the required dependencies:
 
-* [Java 17](https://adoptium.net/)
+* [Java 21](https://adoptium.net/)
 * [Apache Maven](https://maven.apache.org/)
 
 In order to build the runnable JAR file and all other artifacts, you have to run the following Maven command in the terminal:

@@ -30,7 +30,7 @@ public class App extends Application {
 
     public static final Preferences userPreferences = Preferences.userNodeForPackage(App.class);
 
-    private static final String VERSION = "1.4.0";
+    private static final String VERSION = "1.5.0";
 
     public static final String PREFERENCES_VERSION = "version";
     public static final String PREFERENCES_SEVERITY = "severity";
