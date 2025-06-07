@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file. On the [release
 ## [1.5.0] - 2025-06-07
 
 - Require Java 21 or later to run EPUBCheckFX
-- Updated to [EPUBCheck 5.3.1](https://github.com/w3c/epubcheck/releases/tag/v5.2.1)
+- Updated to [EPUBCheck 5.2.1](https://github.com/w3c/epubcheck/releases/tag/v5.2.1)
 - Updated dependencies
 
 ## [1.4.0] - 2024-05-03
