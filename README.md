@@ -13,7 +13,7 @@ A graphical interface for the official [W3C EPUBCheck](https://www.w3.org/publis
 ## Installation / Usage
 
 > [!IMPORTANT]  
-> An installation of [Java 21](https://adoptium.net/) or later is required to run the application.
+> An installation of [Java 21](https://adoptium.net/) (JRE) or later is required to run the application.
 
 Download the correct version of the application for your operating system on the [releases page](https://github.com/Wandmalfarbe/EPUBCheckFX/releases).
 
@@ -41,6 +41,16 @@ Download the correct version of the application for your operating system on the
     ``` shell
     java -jar EPUBCheckFX-x.x.x.jar
     ```
+
+## Version Compatibility
+
+The table below shows the Java version required to run the program (JRE) and the EPUBCheck version used by the current release and previous releases.
+
+| EPUBCheckFX   | minimum JRE | included EPUBCheck |
+|---------------|-------------|--------------------|
+| 1.6.0         | 21          | [5.3.0]            |
+| 1.5.0         | 21          | [5.2.1]            |
+| 1.0.0 – 1.4.0 | 17          | [5.1.0]            |
 
 ## Documentation
 
@@ -79,3 +89,7 @@ mvn clean package -Pmacos
 ## License
 
 This project is open source licensed under the BSD 3-Clause License. Please see the [LICENSE file](LICENSE) for more information.
+
+[5.3.0]: https://github.com/w3c/epubcheck/releases/tag/v5.3.0
+[5.2.1]: https://github.com/w3c/epubcheck/releases/tag/v5.2.1
+[5.1.0]: https://github.com/w3c/epubcheck/releases/tag/v5.1.0
