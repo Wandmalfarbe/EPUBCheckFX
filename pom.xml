@@ -240,13 +240,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.38</version>
+            <version>1.18.46</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.18</version>
+            <version>1.5.37</version>
         </dependency>
         <dependency>
             <groupId>com.github.Dansoftowner</groupId>
@@ -256,12 +256,12 @@
         <dependency>
             <groupId>io.github.mkpaz</groupId>
             <artifactId>atlantafx-base</artifactId>
-            <version>2.0.1</version>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.w3c</groupId>
             <artifactId>epubcheck</artifactId>
-            <version>5.2.1</version>
+            <version>5.3.0</version>
         </dependency>
         <!-- The icon dependency needs to be included before the ikonli-javafx dependency or the
         runnable jar built with the maven-shade-plugin will exit with the
@@ -288,7 +288,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>1.14.0</version>
+            <version>1.14.1</version>
         </dependency>
     </dependencies>
 

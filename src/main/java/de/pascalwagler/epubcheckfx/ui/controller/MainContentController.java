@@ -159,7 +159,7 @@ public class MainContentController implements Initializable {
         initViewToggle();
         initExportFormat();
         initEpubProfile();
-        epubcheckVersion.setText("EPUBCheck Version " + EpubCheck.version() + " - (Built " + EpubCheck.buildDate() + ")");
+        epubcheckVersion.setText("EPUBCheck Version " + EpubCheck.version() + " (Built " + EpubCheck.buildDate() + ")");
     }
 
     private Predicate<CheckMessage> tableFilterPredicate(String search, Severity severity) {
