@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file. On the [releases page](https://github.com/Wandmalfarbe/EPUBCheckFX/releases) you can see all released versions of EPUBCheckFX and download the [latest version](https://github.com/Wandmalfarbe/EPUBCheckFX/releases/latest).
 
+## [1.6.0] - 2026-06-27
+
+- Updated to [EPUBCheck 5.3.0](https://github.com/w3c/epubcheck/releases/tag/v5.3.0)
+- Updated dependencies
+- Updated maven plugins (for the build process)
+- Build/compile with Java 21 (running with Java 21 was already necessary since 1.5.0)
+
 ## [1.5.0] - 2025-06-07
 
 - Require Java 21 or later to run EPUBCheckFX
@@ -57,6 +64,7 @@ All notable changes to this project are documented in this file. On the [release
 
 Initial release with different executables for Windows, macOS and Linux.
 
+[1.6.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/Wandmalfarbe/EPUBCheckFX/compare/v1.2.0...v1.3.0
