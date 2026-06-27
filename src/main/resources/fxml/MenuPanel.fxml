@@ -4,7 +4,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<MenuBar xmlns="http://javafx.com/javafx/20.0.0" xmlns:fx="http://javafx.com/fxml/1"
+<MenuBar xmlns="http://javafx.com/javafx/21.0.0" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="de.pascalwagler.epubcheckfx.ui.controller.MenuPanelController">
     <Menu text="%menu.view">
         <Menu fx:id="menuViewTheme" text="%menu.view.theme"/>
