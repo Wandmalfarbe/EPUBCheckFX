@@ -35,7 +35,7 @@ public class CustomReport implements Report {
         Severity severity = localizedMessages.getMessage(messageId).getSeverity();
 
         Platform.runLater(() -> errorList.add(CheckMessage.builder()
-                .messageId(messageId)
+                .messageId(messageId.toString())
                 .message(formattedMessage)
                 .severity(de.pascalwagler.epubcheckfx.model.Severity.fromEpubcheckSeverity(severity))
                 .suggestion(localizedMessages.getSuggestion(messageId))

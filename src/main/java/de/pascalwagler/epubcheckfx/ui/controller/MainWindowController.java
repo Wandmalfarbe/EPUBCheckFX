@@ -64,9 +64,7 @@ public class MainWindowController implements Initializable {
         event.consume();
 
         if (db.hasFiles()) {
-            mainContentAnchorPane.setVisible(false);
-            dragAndDropAnchorPane.setVisible(false);
-            loadingPane.setVisible(true);
+            uiStateValidationStart();
             mainContentController.runEpubCheck(db.getFiles().get(0));
         }
     }
@@ -79,9 +77,7 @@ public class MainWindowController implements Initializable {
         File file = fileChooser.showOpenDialog(this.dragAndDropAnchorPane.getScene().getWindow());
 
         if (file != null) {
-            mainContentAnchorPane.setVisible(false);
-            dragAndDropAnchorPane.setVisible(false);
-            loadingPane.setVisible(true);
+            uiStateValidationStart();
             mainContentController.runEpubCheck(file);
         }
     }
@@ -92,14 +88,18 @@ public class MainWindowController implements Initializable {
         File folder = directoryChooser.showDialog(this.dragAndDropAnchorPane.getScene().getWindow());
 
         if (folder != null) {
-            mainContentAnchorPane.setVisible(false);
-            dragAndDropAnchorPane.setVisible(false);
-            loadingPane.setVisible(true);
+            uiStateValidationStart();
             mainContentController.runEpubCheck(folder);
         }
     }
 
-    public void validationDone() {
+    public void uiStateValidationStart() {
+        mainContentAnchorPane.setVisible(false);
+        dragAndDropAnchorPane.setVisible(false);
+        loadingPane.setVisible(true);
+    }
+
+    public void uiStateValidationStop() {
         mainContentAnchorPane.setVisible(true);
         dragAndDropAnchorPane.setVisible(false);
         loadingPane.setVisible(false);

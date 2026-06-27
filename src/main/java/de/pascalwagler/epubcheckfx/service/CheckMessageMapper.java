@@ -8,7 +8,7 @@ public class CheckMessageMapper {
 
     public static String[] toStringArray(CheckMessage checkMessage) {
         return new String[]{
-                checkMessage.getMessageId().toString(),
+                checkMessage.toString(),
                 checkMessage.getSeverity().toString(),
                 checkMessage.getMessage(),
                 checkMessage.getPath(),

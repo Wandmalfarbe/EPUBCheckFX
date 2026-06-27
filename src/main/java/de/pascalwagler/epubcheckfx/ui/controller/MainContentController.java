@@ -1,15 +1,15 @@
 package de.pascalwagler.epubcheckfx.ui.controller;
 
 import com.adobe.epubcheck.api.EpubCheck;
-import com.adobe.epubcheck.util.Archive;
-import com.adobe.epubcheck.util.FeatureEnum;
 import de.pascalwagler.epubcheckfx.exception.CreateTempDirException;
 import de.pascalwagler.epubcheckfx.model.CheckMessage;
+import de.pascalwagler.epubcheckfx.model.EpubCheckValidationResult;
 import de.pascalwagler.epubcheckfx.model.EpubProfile;
 import de.pascalwagler.epubcheckfx.model.ExportFormat;
 import de.pascalwagler.epubcheckfx.model.InfoMessage;
 import de.pascalwagler.epubcheckfx.model.Severity;
-import de.pascalwagler.epubcheckfx.service.CustomReport;
+import de.pascalwagler.epubcheckfx.service.AceService;
+import de.pascalwagler.epubcheckfx.service.EpubCheckService;
 import de.pascalwagler.epubcheckfx.service.ExportService;
 import de.pascalwagler.epubcheckfx.ui.BindingUtil;
 import de.pascalwagler.epubcheckfx.ui.PreferencesUtil;
@@ -42,7 +42,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.util.Pair;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,11 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
@@ -104,7 +99,8 @@ public class MainContentController implements Initializable {
     @FXML
     private ComboBox<ExportFormat> exportFormat;
 
-    private final CustomReport customReport = new CustomReport();
+    public final ObservableList<InfoMessage> infoList = FXCollections.observableArrayList();
+    public final ObservableList<CheckMessage> errorList = FXCollections.observableArrayList();
 
     private ResourceBundle resourceBundle;
 
@@ -151,7 +147,7 @@ public class MainContentController implements Initializable {
                     "the temporary directory '" + tempDirectory.toPath() + "'.", e);
         }
 
-        filteredErrorList = customReport.errorList.filtered(checkMessage -> true);
+        filteredErrorList = errorList.filtered(checkMessage -> true);
 
         initValidationResultTable();
         initValidationResultList();
@@ -171,7 +167,7 @@ public class MainContentController implements Initializable {
 
             boolean matchesSearchString =
                     search.isEmpty() // Special case: The empty search matches always.
-                            || checkMessage.getMessageId().toString().toLowerCase().contains(searchLower)
+                            || checkMessage.getMessageId().toLowerCase().contains(searchLower)
                             || checkMessage.getMessage().toLowerCase().contains(searchLower)
                             || checkMessage.getSeverity().toString().contains(searchLower)
                             || checkMessage.getPath().contains(searchLower)
@@ -213,7 +209,6 @@ public class MainContentController implements Initializable {
     private void initValidationResultTable() {
 
         resultTableSearchFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-            log.info("search changed from " + oldValue + " to " + newValue);
             if (Objects.equals(oldValue, newValue)) {
                 return;
             }
@@ -221,7 +216,6 @@ public class MainContentController implements Initializable {
         });
 
         resultTableSeverityFilter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            log.info("severity changed from " + oldValue + " to " + newValue);
             if (Objects.equals(oldValue, newValue)) {
                 return;
             }
@@ -314,11 +308,6 @@ public class MainContentController implements Initializable {
         PreferencesUtil.syncWithPreferences(epubProfile, EpubProfile.DEFAULT, PREFERENCES_EPUB_PROFILE);
     }
 
-    public void runEpubCheck(File file) {
-        this.epubFile = file;
-        runEpubCheck();
-    }
-
     @FXML
     public void chooseFile() {
         mainWindowController.chooseFile();
@@ -329,72 +318,57 @@ public class MainContentController implements Initializable {
         mainWindowController.chooseFolder();
     }
 
-    @FXML
-    private void runEpubCheck() {
-        customReport.errorList.clear();
-        customReport.infoList.clear();
-
+    public void runAce() {
+        //clear();
         CompletableFuture.supplyAsync(() -> {
             try {
-                log.debug("Start Validation");
-
-                File epubToValidate;
-                if (epubFile.isDirectory()) {
-                    epubToValidate = createTempEpubFromFolder();
-                } else {
-                    epubToValidate = epubFile;
-                }
-                EpubCheck epubcheck = new EpubCheck(epubToValidate, customReport, epubProfile.getValue().getEpubcheckEpubProfile());
-                epubcheck.check();
-
-                Map<String, List<Pair<FeatureEnum, String>>> infoMap = toMap();
-                Node metadataPane = UiBuilder.createMetadataPane(infoMap, resourceBundle);
-                Node infoPane = UiBuilder.createInfoPane(infoMap, resourceBundle);
-
-                Platform.runLater(() -> {
-                    scrollMetadata.setContent(metadataPane);
-                    scrollInfo.setContent(infoPane);
-                    infoPanelController.updateFromInfoList(infoMap, epubFile);
-                });
+                EpubCheckValidationResult result = AceService.runAce(this.epubFile);
+                Platform.runLater(() -> errorList.addAll(result.getErrorList()));
             } catch (Exception exception) {
-                log.error("An unexpected error occurred during the validation.", exception);
+                // TODO: show a message
             } finally {
-                log.debug("End Validation");
-                mainWindowController.validationDone();
+                Platform.runLater(() -> mainWindowController.uiStateValidationStop());
             }
             return null;
         });
     }
 
-    private File createTempEpubFromFolder() throws IOException {
-        Archive epub = new Archive(epubFile.getPath(), true);
-        File temporaryEpubFile = new File(tempDirectory, epub.getEpubName());
-
-        if (temporaryEpubFile.exists()) {
-            Files.delete(temporaryEpubFile.toPath());
-        }
-
-        epub.createArchive(temporaryEpubFile);
-        return temporaryEpubFile;
+    public void runEpubCheck(File file) {
+        this.epubFile = file;
+        runEpubCheck();
+        runAce();
     }
 
-    private Map<String, List<Pair<FeatureEnum, String>>> toMap() {
-        Map<String, List<Pair<FeatureEnum, String>>> infos = new HashMap<>();
+    @FXML
+    private void runEpubCheck() {
+        clear();
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                EpubCheckValidationResult result = EpubCheckService.runEpubCheck(epubFile, epubProfile.getValue().getEpubcheckEpubProfile());
 
-        for (InfoMessage item : customReport.infoList) {
+                Platform.runLater(() -> {
+                    infoList.addAll(result.getInfoList());
+                    errorList.addAll(result.getErrorList());
 
-            String resource2 = item.getResource() == null ? "general" : item.getResource();
+                    Node metadataPane = UiBuilder.createMetadataPane(result.getInfoMap(), resourceBundle);
+                    Node infoPane = UiBuilder.createInfoPane(result.getInfoMap(), resourceBundle);
 
-            if (infos.containsKey(resource2)) {
-                List<Pair<FeatureEnum, String>> list = infos.get(resource2);
-                list.add(new Pair<>(item.getFeature(), item.getValue()));
-            } else {
-                List<Pair<FeatureEnum, String>> list = new ArrayList<>();
-                list.add(new Pair<>(item.getFeature(), item.getValue()));
-                infos.put(resource2, list);
+                    scrollMetadata.setContent(metadataPane);
+                    scrollInfo.setContent(infoPane);
+                    infoPanelController.updateFromInfoList(result.getInfoMap(), epubFile);
+                });
+            } catch (Exception exception) {
+                // TODO: show a message
+            } finally {
+                Platform.runLater(() -> mainWindowController.uiStateValidationStop());
             }
-        }
-        return infos;
+            return null;
+        });
+    }
+
+    private void clear() {
+        errorList.clear();
+        infoList.clear();
     }
 
     public void export() throws IOException {
@@ -418,10 +392,10 @@ public class MainContentController implements Initializable {
         switch (selectedExportFormat) {
             case CSV:
             case TSV:
-                ExportService.exportCsvTsv(customReport.errorList, selectedExportFormat, file, resourceBundle);
+                ExportService.exportCsvTsv(errorList, selectedExportFormat, file, resourceBundle);
                 break;
             default:
-                ExportService.exportWithMustache(customReport.errorList, selectedExportFormat, file, resourceBundle);
+                ExportService.exportWithMustache(errorList, selectedExportFormat, file, resourceBundle);
                 break;
         }
     }

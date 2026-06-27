@@ -1,6 +1,5 @@
 package de.pascalwagler.epubcheckfx.model;
 
-import com.adobe.epubcheck.messages.MessageId;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +8,7 @@ import java.net.URL;
 @Data
 @Builder
 public class CheckMessage {
-    private MessageId messageId;
+    private String messageId;
     private URL url;
     private String path;
     private Integer line;

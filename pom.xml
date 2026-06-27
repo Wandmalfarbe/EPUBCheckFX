@@ -20,6 +20,8 @@
 
         <openjfx.version>21.0.11</openjfx.version>
         <ikonli.version>12.4.0</ikonli.version>
+        <jackson.version>3.2.0</jackson.version>
+        <jackson-annotations.version>2.22</jackson-annotations.version>
 
         <main.class>de.pascalwagler.epubcheckfx.App</main.class>
 
@@ -311,6 +313,27 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>1.14.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
     </dependencies>
 

@@ -47,8 +47,9 @@ public class UiBuilder {
         fontIcon.setIconCode(checkMessage.getSeverity().getIcon());
         fontIcon.setIconSize(20);
         Text messageId = new Text();
-        messageId.setText(checkMessage.getMessageId().toString());
-
+        if (checkMessage.getMessageId() != null) {
+            messageId.setText(checkMessage.getMessageId());
+        }
         messageId.getStyleClass().add("title-4");
 
         Label message = new Label();
